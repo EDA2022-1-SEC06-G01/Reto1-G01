@@ -29,7 +29,7 @@ import random as rd
 import math
 import config
 from DISClib.DataStructures import mapentry as me
-from DISClib.DataStructures import liststructure as lt
+from DISClib.ADT import list as lt
 from DISClib.Utils import error as error
 assert config
 
@@ -76,11 +76,12 @@ def newMap(numelements, prime, loadfactor, comparefunction):
                      'size': 0,
                      'type': 'PROBING'}
         if(comparefunction is None):
-            hashtable['comparefunction'] = defaultcompare
+            cmpfunc = defaultcompare
         else:
-            hashtable['comparefunction'] = comparefunction
-        hashtable['table'] = lt.newList('ARRAY_LIST',
-                                        hashtable['comparefunction'])
+            cmpfunc = comparefunction
+        hashtable['comparefunction'] = cmpfunc
+        hashtable['table'] = lt.newList(datastructure='ARRAY_LIST',
+                                        cmpfunction=cmpfunc)
         for _ in range(capacity):
             entry = me.newMapEntry(None, None)
             lt.addLast(hashtable['table'], entry)
