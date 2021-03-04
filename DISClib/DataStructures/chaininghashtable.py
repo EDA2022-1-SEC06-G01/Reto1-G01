@@ -74,6 +74,8 @@ def newMap(numelements, prime, loadfactor, comparefunction):
                      'shift': shift,
                      'table': None,
                      'size': 0,
+                     'limitfactor': loadfactor,
+                     'currentfactor': 0,
                      'type': 'CHAINING'}
         if(comparefunction is None):
             cmpfunc = defaultcompare
@@ -138,6 +140,11 @@ def put(map, key, value):
         else:
             lt.addLast(bucket, entry)   # La llave no existia
             map['size'] += 1
+            map['currentfactor'] = map['size'] / map['capacity']
+
+        if (map['currentfactor'] >= map['limitfactor']):
+            rehash(map)
+
         return map
     except Exception as exp:
         error.reraise(exp, 'Chain:put')
@@ -277,6 +284,33 @@ def valueSet(map):
 # __________________________________________________________________
 #       Helper Functions
 # __________________________________________________________________
+
+
+def rehash(map):
+    """
+    Se aumenta la capacida de la tabla al doble y se hace
+    rehash de todos los elementos de la tabla
+    """
+    try:
+        newtable = lt.newList('ARRAY_LIST', map['comparefunction'])
+        capacity = nextPrime(map['capacity']*2)
+        oldtable = map['table']
+        for _ in range(capacity):
+            bucket = lt.newList(datastructure='SINGLE_LINKED',
+                                cmpfunction=map['comparefunction'])
+            lt.addLast(newtable, bucket)
+        map['size'] = 0
+        map['currentfactor'] = 0
+        map['table'] = newtable
+        map['capacity'] = capacity
+        for pos in range(1, lt.size(oldtable)+1):
+            bucket = lt.getElement(oldtable, pos)
+            for posbucket in range(1, lt.size(bucket)+1):
+                entry = lt.getElement(bucket, posbucket)
+                put(map, entry['key'], entry['value'])
+        return map
+    except Exception as exp:
+        error.reraise(exp, "Chain:rehash")
 
 
 def hashValue(table, key):

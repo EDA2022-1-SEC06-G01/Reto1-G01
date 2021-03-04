@@ -362,9 +362,9 @@ def rehash(map):
             entry = lt.getElement(oldtable, pos+1)
             if (entry['key'] is not None and entry['key'] != '__EMPTY__'):
                 hash = hashValue(map, entry['key'])
-                pos = findSlot(map, entry['key'], hash, map['comparefunction'])
-                lt.changeInfo(map['table'], abs(pos), entry)
-                if (pos < 0):
+                loc = findSlot(map, entry['key'], hash, map['comparefunction'])
+                lt.changeInfo(map['table'], abs(loc), entry)
+                if (loc < 0):
                     map['size'] += 1
                     map['currentfactor'] = map['size'] / map['capacity']
         return map
