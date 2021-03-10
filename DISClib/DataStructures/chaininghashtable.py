@@ -66,8 +66,8 @@ def newMap(numelements, prime, loadfactor, comparefunction):
     """
     try:
         capacity = nextPrime(numelements//loadfactor)
-        scale = rd.randint(1, prime-1) + 1
-        shift = rd.randint(1, prime)
+        scale = rd.randint(1, prime-1)
+        shift = rd.randint(0, prime-1)
         hashtable = {'prime': prime,
                      'capacity': capacity,
                      'scale': scale,
@@ -318,7 +318,7 @@ def hashValue(table, key):
     Calcula un hash para una llave, utilizando el método
     MAD : hashValue(y) = ((ay + b) % p) % M.
     Donde:
-    N es el tamaño de la tabla,
+    M es el tamaño de la tabla, primo
     p es un primo mayor a M,
     a y b enteros aleatoreos dentro del intervalo [0,p-1], con a>0
     """
@@ -327,7 +327,7 @@ def hashValue(table, key):
     b = table['shift']
     p = table['prime']
     m = table['capacity']
-    value = int((abs(h*a + b) % p) % m + 1)
+    value = int((abs(a*h + b) % p) % m) + 1
     return value
 
 
