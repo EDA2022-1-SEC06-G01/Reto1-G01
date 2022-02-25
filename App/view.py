@@ -33,10 +33,11 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
-def newController():
+def newController(tipo_catalogo):
 
-    control = controller.newController()
+    control = controller.newController(tipo_catalogo)
     return control
+
 
 def printMenu():
     print("Bienvenido")
@@ -45,16 +46,19 @@ def printMenu():
     print("3- Encontrar los artistas mas pouplares")
     print("4- Encontrar las canciones mas populares")
     print("5- Encontrar la canción mas popular de un artista")
-    print("6- Encontrar la discografía de un artista")
-    print("7- Clasificar las canciones con mayor distribución")
+    print("6- Organizar con un tipo de ordenamiento iterativo")
+    print("7- Encontrar la discografía de un artista")
+    print("8- Clasificar las canciones con mayor distribución")
     print("0- Salir")
 
-def loadData():
 
-    album, artist, track, catalogo = controller.loadData(control)
+def loadData(tamanio_archivo):
+
+    album, artist, track, catalogo = controller.loadData(tamanio_archivo, control)
     return album, artist, track, catalogo
 
-control = newController()
+
+control = newController("SINGLE_LINKED")
 """
 Menu principal
 """
@@ -62,44 +66,23 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        tipo_catalogo = input("Con que tipo de representacion de lista quieres cargar el catalogo: ")
+        control = newController(tipo_catalogo)
+
+        tamanio_archivo_input = input("Con que tipo tamaño quieres cargar el archivo: ")
+        if tamanio_archivo_input.isnumeric() == True:
+            tamanio_archivo_input = tamanio_archivo_input+"pct"
+        else:
+            tamanio_archivo_input = tamanio_archivo_input
+
         print("Cargando información de los archivos ....")
-        al, ar, tr, cat = loadData()
-        artistFirst3Last3Data = controller.artistFirst3Last3(cat)
-        albumFirst3Last3Data = controller.albumFirst3Last3(cat)
-        trackFirst3Last3Data = controller.trackFirst3Last3(cat)
-        print('Albumes cargados: ' +str(al))
-        print('Artistas cargados: ' +str(ar))
-        print('Canciones cargados: ' +str(tr))
-        print("\n - - artistas - - \n" + 
-        f"1 | nombre: {artistFirst3Last3Data[0]['nombre']}, géneros: {artistFirst3Last3Data[0]['generos']}, popularidad: {artistFirst3Last3Data[0]['popularidad']}, número de seguidores: {artistFirst3Last3Data[0]['seguidores']}\n" +
-        f"2 | nombre: {artistFirst3Last3Data[1]['nombre']}, géneros: {artistFirst3Last3Data[1]['generos']}, popularidad: {artistFirst3Last3Data[1]['popularidad']}, número de seguidores: {artistFirst3Last3Data[1]['seguidores']}\n" +
-        f"3 | nombre: {artistFirst3Last3Data[2]['nombre']}, géneros: {artistFirst3Last3Data[2]['generos']}, popularidad: {artistFirst3Last3Data[2]['popularidad']}, número de seguidores: {artistFirst3Last3Data[2]['seguidores']}\n" +
-        "...\n" + 
-        "...\n" + 
-        "...\n" +
-        f"-3 | nombre: {artistFirst3Last3Data[-3]['nombre']}, géneros: {artistFirst3Last3Data[-3]['generos']}, popularidad: {artistFirst3Last3Data[-3]['popularidad']}, número de seguidores: {artistFirst3Last3Data[-3]['seguidores']}\n" + 
-        f"-2 | nombre: {artistFirst3Last3Data[-2]['nombre']}, géneros: {artistFirst3Last3Data[-2]['generos']}, popularidad: {artistFirst3Last3Data[-2]['popularidad']}, número de seguidores: {artistFirst3Last3Data[-2]['seguidores']}\n" +
-        f"-1 | nombre: {artistFirst3Last3Data[-1]['nombre']}, géneros: {artistFirst3Last3Data[-1]['generos']}, popularidad: {artistFirst3Last3Data[-1]['popularidad']}, número de seguidores: {artistFirst3Last3Data[-1]['seguidores']}\n" +
-        "\n - - álbumes - - \n" +
-        f"1 | nombre del álbum: {albumFirst3Last3Data[0]['nombre']}, tipo de álbum: {albumFirst3Last3Data[0]['tipo']}, mercados en que está disponible el álbum: {albumFirst3Last3Data[0]['disp']}, fecha de lanzamiento: {albumFirst3Last3Data[0]['lanz']}\n" +
-        f"2 | nombre del álbum: {albumFirst3Last3Data[1]['nombre']}, tipo de álbum: {albumFirst3Last3Data[1]['tipo']}, mercados en que está disponible el álbum: {albumFirst3Last3Data[1]['disp']}, fecha de lanzamiento: {albumFirst3Last3Data[1]['lanz']}\n" +
-        f"3 | nombre del álbum: {albumFirst3Last3Data[2]['nombre']}, tipo de álbum: {albumFirst3Last3Data[2]['tipo']}, mercados en que está disponible el álbum: {albumFirst3Last3Data[2]['disp']}, fecha de lanzamiento: {albumFirst3Last3Data[2]['lanz']}\n" +
-        "...\n" + 
-        "...\n" + 
-        "...\n" +
-        f"-3 | nombre del álbum: {albumFirst3Last3Data[-3]['nombre']}, tipo de álbum: {albumFirst3Last3Data[-3]['tipo']}, mercados en que está disponible el álbum: {albumFirst3Last3Data[-3]['disp']}, fecha de lanzamiento: {albumFirst3Last3Data[-3]['lanz']}\n" +
-        f"-2 | nombre del álbum: {albumFirst3Last3Data[-2]['nombre']}, tipo de álbum: {albumFirst3Last3Data[-2]['tipo']}, mercados en que está disponible el álbum: {albumFirst3Last3Data[-2]['disp']}, fecha de lanzamiento: {albumFirst3Last3Data[-2]['lanz']}\n" +
-        f"-1 | nombre del álbum: {albumFirst3Last3Data[-1]['nombre']}, tipo de álbum: {albumFirst3Last3Data[-1]['tipo']}, mercados en que está disponible el álbum: {albumFirst3Last3Data[-1]['disp']}, fecha de lanzamiento: {albumFirst3Last3Data[-1]['lanz']}\n" +
-        "\n - - canciones - - \n" + 
-        f"1 | nombre de la canción: {trackFirst3Last3Data[0]['nombre']}, países en los que está disponible la canción: {trackFirst3Last3Data[0]['disponibilidad']}, duración en milisegundos: {trackFirst3Last3Data[0]['duracion']},  número de la canción en el álbum: {trackFirst3Last3Data[0]['numero_cancion']}\n" +
-        f"2 | nombre de la canción: {trackFirst3Last3Data[1]['nombre']}, países en los que está disponible la canción: {trackFirst3Last3Data[1]['disponibilidad']}, duración en milisegundos: {trackFirst3Last3Data[1]['duracion']},  número de la canción en el álbum: {trackFirst3Last3Data[1]['numero_cancion']}\n" +
-        f"3 | nombre de la canción: {trackFirst3Last3Data[2]['nombre']}, países en los que está disponible la canción: {trackFirst3Last3Data[2]['disponibilidad']}, duración en milisegundos: {trackFirst3Last3Data[2]['duracion']},  número de la canción en el álbum: {trackFirst3Last3Data[2]['numero_cancion']}\n" +
-        "...\n" + 
-        "...\n" + 
-        "...\n" +
-        f"-3 | nombre de la canción: {trackFirst3Last3Data[-3]['nombre']}, países en los que está disponible la canción: {trackFirst3Last3Data[-3]['disponibilidad']}, duración en milisegundos: {trackFirst3Last3Data[-3]['duracion']},  número de la canción en el álbum: {trackFirst3Last3Data[-3]['numero_cancion']}\n" +
-        f"-2 | nombre de la canción: {trackFirst3Last3Data[-2]['nombre']}, países en los que está disponible la canción: {trackFirst3Last3Data[-2]['disponibilidad']}, duración en milisegundos: {trackFirst3Last3Data[-2]['duracion']},  número de la canción en el álbum: {trackFirst3Last3Data[-2]['numero_cancion']}\n" +
-        f"-1 | nombre de la canción: {trackFirst3Last3Data[-1]['nombre']}, países en los que está disponible la canción: {trackFirst3Last3Data[-1]['disponibilidad']}, duración en milisegundos: {trackFirst3Last3Data[-1]['duracion']},  número de la canción en el álbum: {trackFirst3Last3Data[-1]['numero_cancion']}\n")
+        album_size, artist_size, track_size, catalog = loadData(tamanio_archivo_input)
+        artistFirstThree, artistLastThree = controller.artistFirstThreeLastThree(catalog, artist_size)
+        albumFirstThree, albumLastThree = controller.albumFirstThreeLastThree(catalog, album_size)
+        trackFirstThree, trackLastThree = controller.trackFirstThreeLastThree(catalog, track_size)
+        print('Albumes cargados: ' +str(album_size))
+        print('Artistas cargados: ' +str(artist_size))
+        print('Canciones cargados: ' +str(track_size))
 
     elif int(inputs[0]) == 2:
         pass
@@ -110,10 +93,23 @@ while True:
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:
-        pass
+        tipo = input("Escoje un tipo de ordenamiento (selection, insertion o shell): ")
+        if tipo.lower() == "selection":
+            tiempo, organizado = controller.ordenamientoSelection(control)
+            print(f"El tiempo que tomo el ordenamiento Selection en organizar los datos fue {tiempo}")
+
+        elif tipo.lower() == "insertion":
+            tiempo, organizado = controller.ordenamientoInsetion(control)
+            print(f"El tiempo que tomo el ordenamiento Insertion en organizar los datos fue {tiempo}")
+
+        elif tipo.lower() == "shell":
+            tiempo, organizado = controller.ordenamientoShell(control)
+            print(f"El tiempo que tomo el ordenamiento Shell en organizar los datos fue {tiempo}")
+
     elif int(inputs[0]) == 7:
         pass
-
+    elif int(inputs[0]) == 8:
+        pass
     else:
         sys.exit(0)
 sys.exit(0)

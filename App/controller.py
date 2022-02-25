@@ -29,44 +29,45 @@ import csv
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
-def newController():
+def newController(tipo_catalogo):
 
     control = {'model':None
     }
 
-    control['model'] = model.newCatalog()
+    control['model'] = model.newCatalog(tipo_catalogo)
     return control
 
 # Funciones para la carga de datos
 
-def loadData(control):
+def loadData(tamanio_archivo ,control):
 
     catalog = control['model']
-    album = loadAlbums(catalog)
-    artist = loadArtists(catalog)
-    track = loadTracks(catalog)
-        
-    return album, artist, track, catalog
+    album_size = loadAlbums(tamanio_archivo, catalog)
+    artist_size = loadArtists(tamanio_archivo, catalog)
+    track_size = loadTracks(tamanio_archivo, catalog)
+    
+    return album_size, artist_size, track_size, catalog
 
-def loadAlbums(catalog):
 
-    albumsfile = cf.data_dir + 'spotify-albums-utf8-small.csv'
+def loadAlbums(tamanio_archivo, catalog):
+
+    albumsfile = cf.data_dir + f'spotify-albums-utf8-{tamanio_archivo}.csv'
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for album in reader:
       model.addAlbum(catalog, album)
     return model.albumsSize(catalog)
     
-def loadArtists(catalog):
+def loadArtists(tamanio_archivo, catalog):
 
-    albumsfile = cf.data_dir + 'spotify-artists-utf8-small.csv'
+    albumsfile = cf.data_dir + f'spotify-artists-utf8-{tamanio_archivo}.csv'
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for artist in reader:
       model.addArtists(catalog, artist)
     return model.artistSize(catalog)
 
-def loadTracks(catalog):
+def loadTracks(tamanio_archivo, catalog):
 
-    albumsfile = cf.data_dir + 'spotify-tracks-utf8-small.csv'
+    albumsfile = cf.data_dir + f'spotify-tracks-utf8-{tamanio_archivo}.csv'
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for track in reader:
       model.addTrack(catalog, track)
@@ -76,18 +77,26 @@ def loadTracks(catalog):
 # Funciones para la creacion de datos
 
 # Funciones de ordenamiento
+def ordenamientoSelection(catalog):
+  return model.ordenamientoSelection(catalog)
+
+def ordenamientoInsetion(catalog):
+  return model.ordenamientoInsetion(catalog)
+
+def ordenamientoShell(catalog):
+  return model.ordenamientoShell(catalog)
 
 # Funciones de consulta sobre el catálogo
 
-def artistFirst3Last3(catalog):
-  data = model.artistFirst3Last3(catalog)
-  return data
+def artistFirstThreeLastThree(catalog, list_size):
+  firstThree, lastThree = model.firstThreeLastThree(catalog, "artists", list_size)
+  return firstThree, lastThree
 
-def albumFirst3Last3(catalog):
-  data = model.albumFirst3Last3(catalog)
-  return data
+def albumFirstThreeLastThree(catalog, list_size):
+  firstThree, lastThree = model.firstThreeLastThree(catalog, "albums", list_size)
+  return firstThree, lastThree
 
-def trackFirst3Last3(catalog):
-  data = model.trackFirst3Last3(catalog)
-  return data
+def trackFirstThreeLastThree(catalog, list_size):
+  firstThree, lastThree = model.firstThreeLastThree(catalog, "tracks", list_size)
+  return firstThree, lastThree
 
