@@ -27,7 +27,10 @@
 
 import config as cf
 from DISClib.ADT import list as lt
+from DISClib.Algorithms.Sorting import selectionsort as sl
+from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
+import time
 assert cf
 
 """
@@ -37,7 +40,7 @@ los mismos.
 
 # Construccion de modelos
 
-def newCatalog():
+def newCatalog(tipo_catalogo):
     """
     Inicializa el catálogo de libros. Crea una lista vacia para guardar
     todos los libros, adicionalmente, crea una lista vacia para los autores,
@@ -48,9 +51,15 @@ def newCatalog():
                'albums': None,
                'artists': None}
 
-    catalog['tracks'] = lt.newList('ARRAY_LIST')
-    catalog['albums'] = lt.newList('ARRAY_LIST')
-    catalog['artists'] = lt.newList('ARRAY_LIST')
+    tipo = None
+    if tipo_catalogo.lower() == 'array_list':
+        tipo = 'ARRAY_LIST'
+    elif tipo_catalogo.lower() == 'single_linked':
+        tipo = 'SINGLE_LINKED'
+
+    catalog['tracks'] = lt.newList(tipo)
+    catalog['albums'] = lt.newList(tipo)
+    catalog['artists'] = lt.newList(tipo)
 
     return catalog
 
@@ -127,33 +136,50 @@ def artistSize(catalog):
 def trackSize(catalog):
     return lt.size(catalog['tracks'])
 
-def albumFirst3Last3(catalog):
-    lst = catalog["albums"]["elements"]
-    lista = []
-    for i in range(0,3):
-        lista.append(lst[i])
-    for _ in range(2,-1,-1):
-        lista.append(lst[-_-1])
-    return lista
-
-def artistFirst3Last3(catalog):
-    lst = catalog["artists"]["elements"]
-    lista = []
-    for i in range(0,3):
-        lista.append(lst[i])
-    for _ in range(2,-1,-1):
-        lista.append(lst[-_-1])
-    return lista
-
-def trackFirst3Last3(catalog):
-    lst = catalog["tracks"]["elements"]
-    lista = []
-    for i in range(0,3):
-        lista.append(lst[i])
-    for _ in range(2,-1,-1):
-        lista.append(lst[-_-1])
-    return lista
+def firstThreeLastThree(catalog, type, list_size):
+    firstThree = lt.subList(catalog[type], 1, 3)
+    lastThree = lt.subList(catalog[type], list_size-2, 3)
+    return firstThree, lastThree
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
+def cmpArtistsByFollowers(artist1, artist2): 
+    """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
+    return artist1["seguidores"] < artist2["seguidores"]
+
 # Funciones de ordenamiento
+def ordenamientoSelection(catalog):
+    start_time = getTime()
+    organizado = sl.sort(catalog["model"]["artists"], cmpArtistsByFollowers)
+    end_time = getTime()
+    return deltaTime(start_time, end_time), organizado
+    
+
+def ordenamientoInsetion(catalog):
+    start_time = getTime()
+    organizado = ins.sort(catalog["model"]["artists"], cmpArtistsByFollowers)
+    end_time = getTime()
+    return deltaTime(start_time, end_time), organizado
+
+def ordenamientoShell(catalog):
+    start_time = getTime()
+    organizado = sa.sort(catalog["model"]["artists"], cmpArtistsByFollowers)
+    end_time = getTime()
+    return deltaTime(start_time, end_time), organizado
+
+
+# Funciones para medir tiempos de ejecucion
+
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
+
+
+def deltaTime(start, end):
+    """
+    devuelve la diferencia entre tiempos de procesamiento muestreados
+    """
+    elapsed = float(end - start)
+    return elapsed
