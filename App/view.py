@@ -24,6 +24,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from prettytable import PrettyTable
 assert cf
 
 
@@ -58,6 +59,33 @@ def loadData(tamanio_archivo):
     return album, artist, track, catalogo
 
 
+def printArtists(lista_primerosArtistas, lista_ultimosArtistas):
+    x = PrettyTable()
+    x.title = "Primeros 3 y ultimos 3 artistas"
+    x.field_names = ['Nombre', 'Géneros', 'Popularidad', 'Número de seguidores']
+    if lista_primerosArtistas:
+        for _ in range(1,4):
+            datos_artista = lt.getElement(lista_primerosArtistas, _)
+            genero = datos_artista['generos'].replace("[", "").replace("]", "").replace("'", "")
+            x.add_row([datos_artista['nombre'],
+            genero if len(genero) != 0 else "Ninguno",
+            datos_artista['popularidad'], datos_artista['seguidores']
+            ])
+    if lista_ultimosArtistas:
+        x.add_row(["...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "..."])
+        for _ in range(1,4):
+            datos_artista = lt.getElement(lista_ultimosArtistas, _)
+            genero = datos_artista['generos'].replace("[", "").replace("]", "").replace("'", "")
+            x.add_row([datos_artista['nombre'],
+            genero if len(genero) != 0 else "Ninguno",
+            datos_artista['popularidad'], datos_artista['seguidores']
+            ])
+    print(x.get_string())
+    
+
+
 control = newController("SINGLE_LINKED")
 """
 Menu principal
@@ -83,6 +111,8 @@ while True:
         print('Albumes cargados: ' +str(album_size))
         print('Artistas cargados: ' +str(artist_size))
         print('Canciones cargados: ' +str(track_size))
+
+        printArtists(artistFirstThree, artistLastThree)
 
     elif int(inputs[0]) == 2:
         pass
