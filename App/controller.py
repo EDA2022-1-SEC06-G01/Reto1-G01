@@ -77,14 +77,20 @@ def loadTracks(tamanio_archivo, catalog):
 # Funciones para la creacion de datos
 
 # Funciones de ordenamiento
-def ordenamientoSelection(catalog):
-  return model.ordenamientoSelection(catalog)
+def ordenamientoSelection(catalog, criterio, funcion):
+  return model.ordenamientoSelection(catalog, criterio, funcion)
 
-def ordenamientoInsetion(catalog):
-  return model.ordenamientoInsetion(catalog)
+def ordenamientoInsetion(catalog, criterio, funcion):
+  return model.ordenamientoInsetion(catalog, criterio, funcion)
 
-def ordenamientoShell(catalog):
-  return model.ordenamientoShell(catalog)
+def ordenamientoShell(catalog, criterio, funcion):
+  return model.ordenamientoShell(catalog, criterio, funcion)
+
+def ordenamientoMerge(catalog, criterio, funcion):
+  return model.ordenamientoMerge(catalog, criterio, funcion)
+
+def ordenamientoQuick(catalog, criterio, funcion):
+  return model.ordenamientoQuick(catalog, criterio, funcion)
 
 # Funciones de consulta sobre el catálogo
 
@@ -99,4 +105,11 @@ def albumFirstThreeLastThree(catalog, list_size):
 def trackFirstThreeLastThree(catalog, list_size):
   firstThree, lastThree = model.firstThreeLastThree(catalog, "tracks", list_size)
   return firstThree, lastThree
+
+
+# Funciones utilizadas para comparar elementos dentro de una lista
+
+def cmpArtistsByFollowers(artist1, artist2): 
+    """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
+    return artist1["seguidores"] < artist2["seguidores"]
 
