@@ -58,32 +58,99 @@ def loadData(tamanio_archivo):
     album, artist, track, catalogo = controller.loadData(tamanio_archivo, control)
     return album, artist, track, catalogo
 
-
-def printArtists(lista_primerosArtistas, lista_ultimosArtistas):
+# Prints
+def print_artistFirstThreeLastThree(lista_primerosArtistas, lista_ultimosArtistas):
     x = PrettyTable()
-    x.title = "Primeros 3 y ultimos 3 artistas"
-    x.field_names = ['Nombre', 'Géneros', 'Popularidad', 'Número de seguidores']
+    x.field_names = ['name', 'artist_popularity', 'Popularidad', 'Número de seguidores']
+    
     if lista_primerosArtistas:
         for _ in range(1,4):
             datos_artista = lt.getElement(lista_primerosArtistas, _)
-            genero = datos_artista['generos'].replace("[", "").replace("]", "").replace("'", "")
-            x.add_row([datos_artista['nombre'],
-            genero if len(genero) != 0 else "Ninguno",
-            datos_artista['popularidad'], datos_artista['seguidores']
+            genero = datos_artista['genres'].replace("[", "").replace("]", "").replace("'", "")
+            x.add_row([
+                datos_artista['name'],
+                genero if len(genero) != 0 else "Unknown",
+                datos_artista['artist_popularity'],
+                datos_artista['followers']
             ])
+
     if lista_ultimosArtistas:
         x.add_row(["...", "...", "...", "..."])
         x.add_row(["...", "...", "...", "..."])
         x.add_row(["...", "...", "...", "..."])
         for _ in range(1,4):
             datos_artista = lt.getElement(lista_ultimosArtistas, _)
-            genero = datos_artista['generos'].replace("[", "").replace("]", "").replace("'", "")
-            x.add_row([datos_artista['nombre'],
-            genero if len(genero) != 0 else "Ninguno",
-            datos_artista['popularidad'], datos_artista['seguidores']
+            genero = datos_artista['genres'].replace("[", "").replace("]", "").replace("'", "")
+            x.add_row([
+                datos_artista['name'],
+                genero if len(genero) != 0 else "Unknown",
+                datos_artista['artist_popularity'],
+                datos_artista['followers']
             ])
+            
     print(x.get_string())
     
+
+def print_albumFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
+    x = PrettyTable()
+    x.field_names = ['name', 'album_type', 'release_date']
+
+    if lista_primerosAlbums:
+        for _ in range(1,4):
+            datos_albums = lt.getElement(lista_primerosAlbums, _)
+            x.add_row([
+                datos_albums['name'],
+                datos_albums['album_type'],
+                datos_albums['release_date']
+            ])
+
+    if lista_ultimosAlbums:
+        x.add_row(["...", "...", "..."])
+        x.add_row(["...", "...", "..."])
+        x.add_row(["...", "...", "..."])
+        for _ in range(1,4):
+            datos_albums = lt.getElement(lista_primerosAlbums, _)
+            x.add_row([
+                datos_albums['name'],
+                datos_albums['album_type'],
+                datos_albums['release_date']
+            ])
+
+    print(x.get_string())
+
+
+def print_trackFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
+    x = PrettyTable()
+    x.field_names = ['name', 'popularity', 'disc_number', 'track_number', 'duration_ms', 'href']
+
+    if lista_primerosAlbums:
+        for _ in range(1,4):
+            datos_albums = lt.getElement(lista_primerosAlbums, _)
+            x.add_row([
+                datos_albums['name'],
+                datos_albums['popularity'],
+                datos_albums['disc_number'],
+                datos_albums['track_number'],
+                datos_albums['duration_ms'],
+                datos_albums['href'],
+            ])
+
+    if lista_ultimosAlbums:
+        x.add_row(["...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "...", "..."])
+        for _ in range(1,4):
+            datos_albums = lt.getElement(lista_primerosAlbums, _)
+            x.add_row([
+                datos_albums['name'],
+                datos_albums['popularity'],
+                datos_albums['disc_number'],
+                datos_albums['track_number'],
+                datos_albums['duration_ms'],
+                datos_albums['href'],
+            ])
+
+    print(x.get_string())
 
 
 control = newController("SINGLE_LINKED")
@@ -94,25 +161,34 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        tipo_catalogo = input("Con que tipo de representacion de lista quieres cargar el catalogo: ")
+        tipo_catalogo = input("Con que tipo de representacion de lista quieres cargar el catalogo (ARRAY_LIST / SINGLE_LINKED): ")
         control = newController(tipo_catalogo)
 
-        tamanio_archivo_input = input("Con que tipo tamaño quieres cargar el archivo: ")
+        tamanio_archivo_input = input("Con que tipo tamaño quieres cargar el archivo (5, 10, 20, 30, 50, 80, small, large): ")
         if tamanio_archivo_input.isnumeric() == True:
             tamanio_archivo_input = tamanio_archivo_input+"pct"
         else:
             tamanio_archivo_input = tamanio_archivo_input
-
-        print("Cargando información de los archivos ....")
         album_size, artist_size, track_size, catalog = loadData(tamanio_archivo_input)
+        
         artistFirstThree, artistLastThree = controller.artistFirstThreeLastThree(catalog, artist_size)
         albumFirstThree, albumLastThree = controller.albumFirstThreeLastThree(catalog, album_size)
         trackFirstThree, trackLastThree = controller.trackFirstThreeLastThree(catalog, track_size)
-        print('Albumes cargados: ' +str(album_size))
-        print('Artistas cargados: ' +str(artist_size))
-        print('Canciones cargados: ' +str(track_size))
 
-        printArtists(artistFirstThree, artistLastThree)
+        print("\nCargando información de los archivos ....\n")
+        
+        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+        print('artist id count: ' + str(artist_size))
+        print('albums id count: ' + str(album_size))
+        print('tracks id count: ' + str(track_size))
+        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+
+        print("\n\nThe first 3 and last 3 artists in the range are...")
+        print_artistFirstThreeLastThree(artistFirstThree, artistLastThree)
+        print("\n\nThe first 3 and last 3 albums in the range are...")
+        print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
+        print("\n\nThe first 3 and last 3 tracks in the range are...")
+        print_trackFirstThreeLastThree(trackFirstThree, trackLastThree)
 
     elif int(inputs[0]) == 2:
         pass
@@ -135,7 +211,7 @@ while True:
         elif tipo.lower() == "shell":
             tiempo, organizado = controller.ordenamientoShell(control)
             print(f"El tiempo que tomo el ordenamiento Shell en organizar los datos fue {tiempo}")
-
+            
     elif int(inputs[0]) == 7:
         pass
     elif int(inputs[0]) == 8:

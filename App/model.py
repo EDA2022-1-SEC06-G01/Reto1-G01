@@ -67,63 +67,217 @@ def newCatalog(tipo_catalogo):
 
 def addTrack(catalog, track):
     # Se adiciona el track a la lista de tracks
-    t = newTrack(track['name'], track['available_markets'], track['duration_ms'], track['track_number'])
+    t = newTrack(
+        track['id'],
+        track['href'],
+        track['album_id'],
+        track['key'],
+        track['track_number'],
+        track['artists_id'],
+        track['energy'],
+        track['loudness'],
+        track['valence'],
+        track['danceability'],
+        track['playlist'],
+        track['speechiness'],
+        track['popularity'],
+        track['liveness'],
+        track['tempo'],
+        track['duration_ms'],
+        track['acousticness'],
+        track['available_markets'],
+        track['lyrics'],
+        track['disc_number'],
+        track['instrumentalness'],
+        track['preview_url'],
+        track['name']
+        )
     lt.addLast(catalog['tracks'], t)
     return catalog
 
+
 def addAlbum(catalog, albums):
     # Se adiciona el album a la lista de albums
-    t = newAlbum(albums['name'], albums['available_markets'], albums['release_date'], albums['release_date'])
+    t = newAlbum(
+        albums['id'],
+        albums['track_id'],
+        albums['total_tracks'],
+        albums['external_urls'],
+        albums['album_type'],
+        albums['available_markets'],
+        albums['artist_id'],
+        albums['images'],
+        albums['release_date'],
+        albums['name'],
+        albums['release_date_precision']
+        )
     lt.addLast(catalog['albums'], t)
     return catalog
 
+
 def addArtists(catalog, artist):
     # Se adiciona el album a la lista de albums
-    t = newArtist(artist['name'], artist['genres'], artist['artist_popularity'], artist['followers'])
+    t = newArtist(
+        artist['id'],
+        artist['track_id'],
+        artist['artist_popularity'],
+        artist['genres'],
+        artist['name'],
+        artist['followers']
+        )
     lt.addLast(catalog['artists'], t)
 
 # Funciones para creacion de datos
 
-def newAlbum(nombre, tipo, disponibilidad, lanzamiento):
+def newAlbum(
+    id,
+    track_id,
+    total_tracks,
+    external_urls,
+    album_type,
+    available_markets,
+    artist_id,
+    images,
+    release_date,
+    name,
+    release_date_precision
+    ):
 
-    album = {'nombre': '',
-             'tipo': '',
-             'disp': '',
-             'lanz': ''
+    album = {
+        'id': '',
+        'track_id': '',
+        'total_tracks': '',
+        'external_urls': '',
+        'album_type': '',
+        'available_markets': '',
+        'artist_id': '',
+        'images': '',
+        'release_date': '',
+        'name': '',
+        'release_date_precision': ''
             }
 
-    album['nombre'] = nombre
-    album['tipo'] = tipo
-    album['disp'] = disponibilidad
-    album['lanz'] = lanzamiento
+    album['id'] = id
+    album['track_id'] = track_id
+    album['total_tracks'] = total_tracks
+    album['external_urls'] = external_urls
+    album['album_type'] = album_type
+    album['available_markets'] = available_markets
+    album['artist_id'] = artist_id
+    album['images'] = images
+    album['release_date'] = release_date
+    album['name'] = name
+    album['release_date_precision'] = release_date_precision
 
     return album
 
-def newTrack(nombre, disponibilidad, duracion, cancion):
 
-    track = {'nombre': '',
-             'disponibilidad': '',
-             'duracion': '',
-             'cancion': ''
+def newTrack(
+    id,
+    href,
+    album_id,
+    key,
+    track_number,
+    artists_id,
+    energy,
+    loudness,
+    valence,
+    danceability,
+    playlist,
+    speechiness,
+    popularity,
+    liveness,
+    tempo,
+    duration_ms,
+    acousticness,
+    available_markets,
+    lyrics,
+    disc_number,
+    instrumentalness,
+    preview_url,
+    name
+    ):
+
+    track = {
+        'id': '',
+        'href': '',
+        'album_id': '',
+        'key': '',
+        'track_number': '',
+        'artists_id': '',
+        'energy': '',
+        'loudness': '',
+        'valence': '',
+        'danceability': '',
+        'playlist': '',
+        'speechiness': '',
+        'popularity': '',
+        'liveness': '',
+        'tempo': '',
+        'duration_ms': '',
+        'acousticness': '',
+        'available_markets': '',
+        'lyrics': '',
+        'disc_number': '',
+        'instrumentalness': '',
+        'preview_url': '',
+        'name': ''
             }
-    track['nombre'] = nombre
-    track['disponibilidad'] = disponibilidad
-    track['duracion'] = duracion
-    track['numero_cancion'] = cancion
+
+    track['id'] = id
+    track['href'] = href
+    track['album_id'] = album_id
+    track['key'] = key
+    track['track_number'] = track_number
+    track['artists_id'] = artists_id
+    track['energy'] = energy
+    track['loudness'] = loudness
+    track['valence'] = valence
+    track['danceability'] = danceability
+    track['playlist'] = playlist
+    track['speechiness'] = speechiness
+    track['popularity'] = popularity
+    track['liveness'] = liveness
+    track['tempo'] = tempo
+    track['duration_ms'] = duration_ms
+    track['acousticness'] = acousticness
+    track['available_markets'] = available_markets
+    track['lyrics'] = lyrics
+    track['disc_number'] = disc_number
+    track['instrumentalness'] = instrumentalness
+    track['preview_url'] = preview_url
+    track['name'] = name
+
     return track
 
-def newArtist(nombre, generos, popularidad, seguidores):
 
-    artist = {'nombre': '',
-              'generos': '',
-              'popularidad': '',
-              'seguidores': ''
+def newArtist(
+    id,
+    track_id,
+    artist_popularity,
+    genres,
+    name,
+    followers
+    ):
+
+    artist = {
+        'id': '',
+        'track_id': '',
+        'artist_popularity': '',
+        'genres': '',
+        'name': '',
+        'followers': ''
             }
-    artist['nombre'] = nombre
-    artist['generos'] = generos
-    artist['popularidad'] = popularidad
-    artist['seguidores'] = seguidores
+
+    artist['id'] = id
+    artist['track_id'] = track_id
+    artist['artist_popularity'] = artist_popularity
+    artist['genres'] = genres
+    artist['name'] = name
+    artist['followers'] = followers
+
     return artist
+
 
 # Funciones de consulta
 
