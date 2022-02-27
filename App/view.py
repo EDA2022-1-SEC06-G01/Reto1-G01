@@ -199,19 +199,32 @@ while True:
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:
-        tipo = input("Escoje un tipo de ordenamiento (selection, insertion o shell): ")
+        tipo = input("Escoje un tipo de ordenamiento (selection, insertion, shell, merge o quick): ")
+        criterio = "artists"
+        funcion = controller.cmpArtistsByFollowers
         if tipo.lower() == "selection":
-            tiempo, organizado = controller.ordenamientoSelection(control)
+            tiempo, organizado = controller.ordenamientoSelection(control, criterio, funcion)
             print(f"El tiempo que tomo el ordenamiento Selection en organizar los datos fue {tiempo}")
 
         elif tipo.lower() == "insertion":
-            tiempo, organizado = controller.ordenamientoInsetion(control)
+            tiempo, organizado = controller.ordenamientoInsetion(control, criterio, funcion)
             print(f"El tiempo que tomo el ordenamiento Insertion en organizar los datos fue {tiempo}")
 
         elif tipo.lower() == "shell":
-            tiempo, organizado = controller.ordenamientoShell(control)
+            tiempo, organizado = controller.ordenamientoShell(control, criterio, funcion)
             print(f"El tiempo que tomo el ordenamiento Shell en organizar los datos fue {tiempo}")
-            
+
+        elif tipo.lower() == "merge":
+             tiempo, organizado = controller.ordenamientoMerge(control, criterio, funcion)
+             print(f"El tiempo que tomo el ordenamiento Merge en organizar los datos fue {tiempo}")
+
+        elif tipo.lower() == "quick":
+             tiempo, organizado = controller.ordenamientoQuick(control, criterio, funcion)
+             print(f"El tiempo que tomo el ordenamiento Quick en organizar los datos fue {tiempo}")
+
+        else: 
+            print("Intente un nombre válido")
+
     elif int(inputs[0]) == 7:
         pass
     elif int(inputs[0]) == 8:

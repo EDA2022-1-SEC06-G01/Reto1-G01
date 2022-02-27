@@ -295,31 +295,41 @@ def firstThreeLastThree(catalog, type, list_size):
     lastThree = lt.subList(catalog[type], list_size-2, 3)
     return firstThree, lastThree
 
-# Funciones utilizadas para comparar elementos dentro de una lista
 
-def cmpArtistsByFollowers(artist1, artist2): 
-    """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
-    return artist1["seguidores"] < artist2["seguidores"]
 
 # Funciones de ordenamiento
-def ordenamientoSelection(catalog):
+def ordenamientoSelection(catalog, criterio, funcion):
     start_time = getTime()
-    organizado = sl.sort(catalog["model"]["artists"], cmpArtistsByFollowers)
+    organizado = sl.sort(catalog["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
     
 
-def ordenamientoInsetion(catalog):
+def ordenamientoInsetion(catalog, criterio, funcion):
     start_time = getTime()
-    organizado = ins.sort(catalog["model"]["artists"], cmpArtistsByFollowers)
+    organizado = ins.sort(catalog["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
 
-def ordenamientoShell(catalog):
+def ordenamientoShell(catalog, criterio, funcion):
     start_time = getTime()
-    organizado = sa.sort(catalog["model"]["artists"], cmpArtistsByFollowers)
+    organizado = sa.sort(catalog["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
+
+def ordenamientoMerge(catalog, criterio, funcion):
+    start_time = getTime()
+    organizado = sa.sort(catalog["model"][criterio], funcion)
+    end_time = getTime()
+    return deltaTime(start_time, end_time), organizado
+
+def ordenamientoQuick(catalog, criterio, funcion):
+    start_time = getTime()
+    organizado = sa.sort(catalog["model"][criterio], funcion)
+    end_time = getTime()
+    return deltaTime(start_time, end_time), organizado
+
+
 
 
 # Funciones para medir tiempos de ejecucion
