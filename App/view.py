@@ -22,10 +22,14 @@
 
 import config as cf
 import sys
+import csv
 import controller
 from DISClib.ADT import list as lt
 from prettytable import PrettyTable
 assert cf
+default_limit = 1000
+sys.setrecursionlimit(default_limit*100)
+csv.field_size_limit(300000)
 
 
 """

@@ -30,6 +30,8 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import selectionsort as sl
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as me
+from DISClib.Algorithms.Sorting import quicksort as qu
 import time
 assert cf
 
@@ -319,13 +321,13 @@ def ordenamientoShell(catalog, criterio, funcion):
 
 def ordenamientoMerge(catalog, criterio, funcion):
     start_time = getTime()
-    organizado = sa.sort(catalog["model"][criterio], funcion)
+    organizado = me.sort(catalog["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
 
 def ordenamientoQuick(catalog, criterio, funcion):
     start_time = getTime()
-    organizado = sa.sort(catalog["model"][criterio], funcion)
+    organizado = qu.sort(catalog["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
 

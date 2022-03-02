@@ -111,5 +111,5 @@ def trackFirstThreeLastThree(catalog, list_size):
 
 def cmpArtistsByFollowers(artist1, artist2): 
     """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
-    return artist1["seguidores"] < artist2["seguidores"]
+    return artist1["followers"] < artist2["followers"]
 
