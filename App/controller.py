@@ -41,75 +41,74 @@ def newController(tipo_catalogo):
 
 def loadData(tamanio_archivo ,control):
 
-    catalog = control['model']
-    album_size = loadAlbums(tamanio_archivo, catalog)
-    artist_size = loadArtists(tamanio_archivo, catalog)
-    track_size = loadTracks(tamanio_archivo, catalog)
+    album_size = loadAlbums(tamanio_archivo, control)
+    artist_size = loadArtists(tamanio_archivo, control)
+    track_size = loadTracks(tamanio_archivo, control)
     
-    return album_size, artist_size, track_size, catalog
+    return album_size, artist_size, track_size
 
 
-def loadAlbums(tamanio_archivo, catalog):
+def loadAlbums(tamanio_archivo, control):
 
     albumsfile = cf.data_dir + f'spotify-albums-utf8-{tamanio_archivo}.csv'
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for album in reader:
-      model.addAlbum(catalog, album)
-    return model.albumsSize(catalog)
+      model.addAlbum(control, album)
+    return model.listSize(control["model"]['albums'])
     
-def loadArtists(tamanio_archivo, catalog):
+
+def loadArtists(tamanio_archivo, control):
 
     albumsfile = cf.data_dir + f'spotify-artists-utf8-{tamanio_archivo}.csv'
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for artist in reader:
-      model.addArtists(catalog, artist)
-    return model.artistSize(catalog)
+      model.addArtists(control, artist)
+    return model.listSize(control["model"]['artists'])
 
-def loadTracks(tamanio_archivo, catalog):
+
+def loadTracks(tamanio_archivo, control):
 
     albumsfile = cf.data_dir + f'spotify-tracks-utf8-{tamanio_archivo}.csv'
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for track in reader:
-      model.addTrack(catalog, track)
-    return model.trackSize(catalog)
+      model.addTrack(control, track)
+    return model.listSize(control["model"]['tracks'])
 
 
 # Funciones para la creacion de datos
 
 # Funciones de ordenamiento
-def ordenamientoSelection(catalog, criterio, funcion):
-  return model.ordenamientoSelection(catalog, criterio, funcion)
+def ordenamientoSelection(control, criterio, funcion):
+  return model.ordenamientoSelection(control, criterio, funcion)
 
-def ordenamientoInsetion(catalog, criterio, funcion):
-  return model.ordenamientoInsetion(catalog, criterio, funcion)
 
-def ordenamientoShell(catalog, criterio, funcion):
-  return model.ordenamientoShell(catalog, criterio, funcion)
+def ordenamientoInsetion(control, criterio, funcion):
+  return model.ordenamientoInsetion(control, criterio, funcion)
 
-def ordenamientoMerge(catalog, criterio, funcion):
-  return model.ordenamientoMerge(catalog, criterio, funcion)
 
-def ordenamientoQuick(catalog, criterio, funcion):
-  return model.ordenamientoQuick(catalog, criterio, funcion)
+def ordenamientoShell(control, criterio, funcion):
+  return model.ordenamientoShell(control, criterio, funcion)
+
+
+def ordenamientoMerge(control, criterio, funcion):
+  return model.ordenamientoMerge(control, criterio, funcion)
+
+
+def ordenamientoQuick(control, criterio, funcion):
+  return model.ordenamientoQuick(control, criterio, funcion)
 
 # Funciones de consulta sobre el catálogo
 
-def artistFirstThreeLastThree(catalog, list_size):
-  firstThree, lastThree = model.firstThreeLastThree(catalog, "artists", list_size)
+def FirstThreeLastThree(list, list_size):
+  firstThree, lastThree = model.firstThreeLastThree(list, list_size)
   return firstThree, lastThree
 
-def albumFirstThreeLastThree(catalog, list_size):
-  firstThree, lastThree = model.firstThreeLastThree(catalog, "albums", list_size)
-  return firstThree, lastThree
+def listSize(list):
+  return model.listSize(list)
 
-def trackFirstThreeLastThree(catalog, list_size):
-  firstThree, lastThree = model.firstThreeLastThree(catalog, "tracks", list_size)
-  return firstThree, lastThree
+# Funciones de comparacion
+def cmpArtistsByFollowers(artist1, artist2):
+  return model.cmpArtistsByFollowers(artist1, artist2)
 
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-def cmpArtistsByFollowers(artist1, artist2): 
-    """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
-    return artist1["seguidores"] < artist2["seguidores"]
-
+def cmpYears(date1, date2):
+  return model.cmpYears(date1, date2)

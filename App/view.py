@@ -23,10 +23,14 @@
 import config as cf
 import sys
 import controller
+import csv
 from DISClib.ADT import list as lt
 from prettytable import PrettyTable
 assert cf
 
+csv.field_size_limit(2147483647)
+default_limit = 1000
+sys.setrecursionlimit(default_limit*10)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -55,8 +59,8 @@ def printMenu():
 
 def loadData(tamanio_archivo):
 
-    album, artist, track, catalogo = controller.loadData(tamanio_archivo, control)
-    return album, artist, track, catalogo
+    album, artist, track = controller.loadData(tamanio_archivo, control)
+    return album, artist, track
 
 # Prints
 def print_artistFirstThreeLastThree(lista_primerosArtistas, lista_ultimosArtistas):
@@ -109,7 +113,7 @@ def print_albumFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
         x.add_row(["...", "...", "..."])
         x.add_row(["...", "...", "..."])
         for _ in range(1,4):
-            datos_albums = lt.getElement(lista_primerosAlbums, _)
+            datos_albums = lt.getElement(lista_ultimosAlbums, _)
             x.add_row([
                 datos_albums['name'],
                 datos_albums['album_type'],
@@ -140,7 +144,7 @@ def print_trackFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
         x.add_row(["...", "...", "...", "...", "...", "..."])
         x.add_row(["...", "...", "...", "...", "...", "..."])
         for _ in range(1,4):
-            datos_albums = lt.getElement(lista_primerosAlbums, _)
+            datos_albums = lt.getElement(lista_ultimosAlbums, _)
             x.add_row([
                 datos_albums['name'],
                 datos_albums['popularity'],
@@ -169,11 +173,11 @@ while True:
             tamanio_archivo_input = tamanio_archivo_input+"pct"
         else:
             tamanio_archivo_input = tamanio_archivo_input
-        album_size, artist_size, track_size, catalog = loadData(tamanio_archivo_input)
+        album_size, artist_size, track_size = loadData(tamanio_archivo_input)
         
-        artistFirstThree, artistLastThree = controller.artistFirstThreeLastThree(catalog, artist_size)
-        albumFirstThree, albumLastThree = controller.albumFirstThreeLastThree(catalog, album_size)
-        trackFirstThree, trackLastThree = controller.trackFirstThreeLastThree(catalog, track_size)
+        artistFirstThree, artistLastThree = controller.FirstThreeLastThree(control["model"]["artists"], artist_size)
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(control["model"]["albums"], album_size)
+        trackFirstThree, trackLastThree = controller.FirstThreeLastThree(control["model"]["tracks"], track_size)
 
         print("\nCargando información de los archivos ....\n")
         
@@ -191,7 +195,10 @@ while True:
         print_trackFirstThreeLastThree(trackFirstThree, trackLastThree)
 
     elif int(inputs[0]) == 2:
-        pass
+        incial, final = input("fechas con espacio: ").split()
+        time, organized = controller.ordenamientoShell(control, "albums", controller.cmpYears)
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(organized, controller.listSize(organized))
+        print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
     elif int(inputs[0]) == 3:
         pass
     elif int(inputs[0]) == 4:

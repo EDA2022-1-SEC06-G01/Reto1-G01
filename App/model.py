@@ -30,8 +30,12 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import selectionsort as sl
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import quicksort as quick
+from DISClib.Algorithms.Sorting import mergesort as merge
+import datetime
 import time
 assert cf
+
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -65,7 +69,7 @@ def newCatalog(tipo_catalogo):
 
 # Funciones para agregar informacion al catalogo
 
-def addTrack(catalog, track):
+def addTrack(control, track):
     # Se adiciona el track a la lista de tracks
     t = newTrack(
         track['id'],
@@ -92,11 +96,11 @@ def addTrack(catalog, track):
         track['preview_url'],
         track['name']
         )
-    lt.addLast(catalog['tracks'], t)
-    return catalog
+    lt.addLast(control['model']['tracks'], t)
+    return control
 
 
-def addAlbum(catalog, albums):
+def addAlbum(control, albums):
     # Se adiciona el album a la lista de albums
     t = newAlbum(
         albums['id'],
@@ -111,11 +115,11 @@ def addAlbum(catalog, albums):
         albums['name'],
         albums['release_date_precision']
         )
-    lt.addLast(catalog['albums'], t)
-    return catalog
+    lt.addLast(control['model']['albums'], t)
+    return control
 
 
-def addArtists(catalog, artist):
+def addArtists(control, artist):
     # Se adiciona el album a la lista de albums
     t = newArtist(
         artist['id'],
@@ -125,7 +129,7 @@ def addArtists(catalog, artist):
         artist['name'],
         artist['followers']
         )
-    lt.addLast(catalog['artists'], t)
+    lt.addLast(control['model']['artists'], t)
 
 # Funciones para creacion de datos
 
@@ -281,55 +285,61 @@ def newArtist(
 
 # Funciones de consulta
 
-def albumsSize(catalog):
-    return lt.size(catalog['albums'])
+def listSize(list):
+    return lt.size(list)
 
-def artistSize(catalog):
-    return lt.size(catalog['artists'])
 
-def trackSize(catalog):
-    return lt.size(catalog['tracks'])
-
-def firstThreeLastThree(catalog, type, list_size):
-    firstThree = lt.subList(catalog[type], 1, 3)
-    lastThree = lt.subList(catalog[type], list_size-2, 3)
+def firstThreeLastThree(list, list_size):
+    firstThree = lt.subList(list, 1, 3)
+    lastThree = lt.subList(list, list_size-2, 3)
     return firstThree, lastThree
 
 
 
 # Funciones de ordenamiento
-def ordenamientoSelection(catalog, criterio, funcion):
+def ordenamientoSelection(control, criterio, funcion):
     start_time = getTime()
-    organizado = sl.sort(catalog["model"][criterio], funcion)
+    organizado = sl.sort(control["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
     
 
-def ordenamientoInsetion(catalog, criterio, funcion):
+def ordenamientoInsetion(control, criterio, funcion):
     start_time = getTime()
-    organizado = ins.sort(catalog["model"][criterio], funcion)
+    organizado = ins.sort(control["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
 
-def ordenamientoShell(catalog, criterio, funcion):
+
+def ordenamientoShell(control, criterio, funcion):
     start_time = getTime()
-    organizado = sa.sort(catalog["model"][criterio], funcion)
+    organizado = sa.sort(control["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
+
 
 def ordenamientoMerge(catalog, criterio, funcion):
     start_time = getTime()
-    organizado = sa.sort(catalog["model"][criterio], funcion)
+    organizado = merge.sort(catalog["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
 
-def ordenamientoQuick(catalog, criterio, funcion):
+
+def ordenamientoQuick(control, criterio, funcion):
     start_time = getTime()
-    organizado = sa.sort(catalog["model"][criterio], funcion)
+    organizado = quick.sort(control["model"][criterio], funcion)
     end_time = getTime()
     return deltaTime(start_time, end_time), organizado
 
 
+# Funciones de comparacion
+
+def cmpArtistsByFollowers(artist1, artist2): 
+    """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
+    return artist1["followers"] < artist2["followers"]
+
+def cmpYears(date1, date2):
+    return (date1["release_year"].year > date2["release_year"].year)
 
 
 # Funciones para medir tiempos de ejecucion
@@ -347,3 +357,4 @@ def deltaTime(start, end):
     """
     elapsed = float(end - start)
     return elapsed
+
