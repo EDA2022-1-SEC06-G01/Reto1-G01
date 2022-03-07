@@ -28,9 +28,6 @@ import csv
 from DISClib.ADT import list as lt
 from prettytable import PrettyTable
 assert cf
-default_limit = 1000
-sys.setrecursionlimit(default_limit*100)
-csv.field_size_limit(300000)
 
 csv.field_size_limit(2147483647)
 default_limit = 1000
@@ -198,13 +195,21 @@ while True:
         print("\n\nThe first 3 and last 3 tracks in the range are...")
         print_trackFirstThreeLastThree(trackFirstThree, trackLastThree)
 
+
     elif int(inputs[0]) == 2:
-        incial, final = input("fechas con espacio: ").split()
-        time, organized = controller.ordenamientoShell(control, "albums", controller.cmpYears)
-        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(organized, controller.listSize(organized))
+        inicial, final = input("fechas con espacio: ").split()
+        organized = controller.ordenamientoMerge_Requerimiento1(control)
+        index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
+        index_anio_final = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
+        sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(sublista, controller.listSize(sublista))
         print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
+
+
     elif int(inputs[0]) == 3:
-        pass
+        organized = controller.ordenamientoMerge_Requerimiento2(control)
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(organized, controller.listSize(organized))
+        print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
     elif int(inputs[0]) == 4:
         pass
     elif int(inputs[0]) == 5:

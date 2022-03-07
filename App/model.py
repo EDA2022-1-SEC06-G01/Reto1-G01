@@ -25,16 +25,23 @@
  """
 
 
+from platform import release
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.Algorithms.Sorting import selectionsort as sl
-from DISClib.Algorithms.Sorting import insertionsort as ins
-from DISClib.Algorithms.Sorting import shellsort as sa
-from DISClib.Algorithms.Sorting import quicksort as quick
-from DISClib.Algorithms.Sorting import mergesort as merge
+from DISClib.Algorithms.Sorting import insertionsort
+from DISClib.Algorithms.Sorting import selectionsort
+from DISClib.Algorithms.Sorting import shellsort
+from DISClib.Algorithms.Sorting import mergesort
+from DISClib.Algorithms.Sorting import quicksort
 import datetime
 import time
 assert cf
+import csv
+import sys
+
+csv.field_size_limit(2147483647)
+default_limit = 1000
+sys.setrecursionlimit(default_limit*10)
 
 
 """
@@ -169,7 +176,7 @@ def newAlbum(
     album['available_markets'] = available_markets
     album['artist_id'] = artist_id
     album['images'] = images
-    album['release_date'] = release_date
+    album['release_date'] = datetime.datetime.strptime(release_date, "%Y-%m-%d") if (len(release_date) == 10) else (datetime.datetime.strptime(release_date[:4] + "19" + release_date[-2:], "%b-%Y") if (len(release_date) == 6) else (datetime.datetime.strptime(release_date, '%Y')))
     album['name'] = name
     album['release_date_precision'] = release_date_precision
 
@@ -295,41 +302,83 @@ def firstThreeLastThree(list, list_size):
     return firstThree, lastThree
 
 
+def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
+    elementToFind = int(elementToFind)
+    if lst_size == 0:
+        return -1
+ 
+    # Since array is sorted, an element present
+    # in array must be in range defined by corner
+    if (pos1 <= lst_size and elementToFind >= lt.getElement(lst, pos1)["release_date"].year and elementToFind <= lt.getElement(lst, lst_size)["release_date"].year):
+ 
+        # Probing the position with keeping
+        # uniform distribution in mind.
+        pos = pos1 + ((lst_size - pos1) // (lt.getElement(lst, lst_size)["release_date"].year - lt.getElement(lst, pos1)["release_date"].year) * (elementToFind - lt.getElement(lst, pos1)["release_date"].year))
+ 
+        # Condition of target found
+        if lt.getElement(lst, pos)["release_date"].year == elementToFind:
+            if primeroUltimo == True:
+                while lt.getElement(lst, pos-1)["release_date"].year == elementToFind:
+                    pos -= 1
+            else:
+                while lt.getElement(lst, pos)["release_date"].year == elementToFind:
+                    pos += 1
+            return pos
+ 
+        # If x is larger, x is in right subarray
+        if lt.getElement(lst, pos)["release_date"].year < elementToFind:
+            return interpolationSearch_Requerimiento1(lst, pos + 1, lst_size, elementToFind, primeroUltimo)
+ 
+        # If x is smaller, x is in left subarray
+        if lt.getElement(lst, pos)["release_date"].year > elementToFind:
+            return interpolationSearch_Requerimiento1(lst, pos1, pos - 1, elementToFind, primeroUltimo)
+    
+    return -1
+
+def binarySearch(lst, elemento, elementoDiccionario):
+    low = 1
+    high = lt.size(lst)
+    mid = 0
+ 
+    while low <= high:
+ 
+        mid = (high + low) // 2
+ 
+        # If x is greater, ignore left half
+        if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < int(elemento):
+            low = mid + 1
+ 
+        # If x is smaller, ignore right half
+        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > int(elemento):
+            high = mid - 1
+ 
+        # means x is present at mid
+        else:
+            return mid
+ 
+    # If we reach here, then the element was not present
+    return -1
+
 
 # Funciones de ordenamiento
-def ordenamientoSelection(control, criterio, funcion):
-    start_time = getTime()
-    organizado = sl.sort(control["model"][criterio], funcion)
-    end_time = getTime()
-    return deltaTime(start_time, end_time), organizado
+def ordenamientoSelection(control, criterio, cmpfunction):
+    return selectionsort.sort(control["model"][criterio], cmpfunction)
     
 
-def ordenamientoInsetion(control, criterio, funcion):
-    start_time = getTime()
-    organizado = ins.sort(control["model"][criterio], funcion)
-    end_time = getTime()
-    return deltaTime(start_time, end_time), organizado
+def ordenamientoInsetion(control, criterio, cmpfunction):
+    return insertionsort.sort(control["model"][criterio], cmpfunction)
 
 
-def ordenamientoShell(control, criterio, funcion):
-    start_time = getTime()
-    organizado = sa.sort(control["model"][criterio], funcion)
-    end_time = getTime()
-    return deltaTime(start_time, end_time), organizado
+def ordenamientoShell(control, criterio, cmpfunction):
+    return shellsort.sort(control["model"][criterio], cmpfunction)
 
 
-def ordenamientoMerge(catalog, criterio, funcion):
-    start_time = getTime()
-    organizado = merge.sort(catalog["model"][criterio], funcion)
-    end_time = getTime()
-    return deltaTime(start_time, end_time), organizado
+def ordenamientoMerge(control, criterio, cmpfunction):
+    return mergesort.sort(control["model"][criterio], cmpfunction)
 
 
-def ordenamientoQuick(control, criterio, funcion):
-    start_time = getTime()
-    organizado = quick.sort(control["model"][criterio], funcion)
-    end_time = getTime()
-    return deltaTime(start_time, end_time), organizado
+def ordenamientoQuick(control, criterio, cmpfunction):
+    return quicksort.sort(control["model"][criterio], cmpfunction)
 
 
 # Funciones de comparacion
@@ -339,7 +388,10 @@ def cmpArtistsByFollowers(artist1, artist2):
     return artist1["followers"] < artist2["followers"]
 
 def cmpYears(date1, date2):
-    return (date1["release_year"].year > date2["release_year"].year)
+    return (date1["release_date"].year < date2["release_date"].year)
+
+def cmpArtistsPopularity(artist1, artists2):
+    return artist1["artist_popularity"] > artists2["artist_popularity"]
 
 
 # Funciones para medir tiempos de ejecucion

@@ -24,6 +24,11 @@ from matplotlib import artist
 import config as cf
 import model
 import csv
+import sys
+
+csv.field_size_limit(2147483647)
+default_limit = 1000
+sys.setrecursionlimit(default_limit*10)
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -89,11 +94,17 @@ def ordenamientoInsetion(control, criterio, funcion):
 def ordenamientoShell(control, criterio, funcion):
   return model.ordenamientoShell(control, criterio, funcion)
 
-
+  # Implementaciones ordenamiento MergeSort
 def ordenamientoMerge(control, criterio, funcion):
   return model.ordenamientoMerge(control, criterio, funcion)
 
+def ordenamientoMerge_Requerimiento1(control):
+  return model.ordenamientoMerge(control, "albums", model.cmpYears)
 
+def ordenamientoMerge_Requerimiento2(control):
+  return model.ordenamientoMerge(control, "artists", model.cmpArtistsPopularity)
+
+  # Implementaciones ordenamiento QuickSort
 def ordenamientoQuick(control, criterio, funcion):
   return model.ordenamientoQuick(control, criterio, funcion)
 
@@ -106,9 +117,10 @@ def FirstThreeLastThree(list, list_size):
 def listSize(list):
   return model.listSize(list)
 
+def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
+  return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo)
+
 # Funciones de comparacion
 def cmpArtistsByFollowers(artist1, artist2):
   return model.cmpArtistsByFollowers(artist1, artist2)
 
-def cmpYears(date1, date2):
-  return model.cmpYears(date1, date2)
