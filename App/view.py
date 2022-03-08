@@ -28,6 +28,7 @@ import csv
 from DISClib.ADT import list as lt
 from prettytable import PrettyTable
 assert cf
+import model
 
 csv.field_size_limit(2147483647)
 default_limit = 1000
@@ -71,10 +72,9 @@ def print_artistFirstThreeLastThree(lista_primerosArtistas, lista_ultimosArtista
     if lista_primerosArtistas:
         for _ in range(1,4):
             datos_artista = lt.getElement(lista_primerosArtistas, _)
-            genero = datos_artista['genres'].replace("[", "").replace("]", "").replace("'", "")
             x.add_row([
                 datos_artista['name'],
-                genero if len(genero) != 0 else "Unknown",
+                datos_artista['genres'],
                 datos_artista['artist_popularity'],
                 datos_artista['followers']
             ])
@@ -85,16 +85,29 @@ def print_artistFirstThreeLastThree(lista_primerosArtistas, lista_ultimosArtista
         x.add_row(["...", "...", "...", "..."])
         for _ in range(1,4):
             datos_artista = lt.getElement(lista_ultimosArtistas, _)
-            genero = datos_artista['genres'].replace("[", "").replace("]", "").replace("'", "")
             x.add_row([
                 datos_artista['name'],
-                genero if len(genero) != 0 else "Unknown",
+                datos_artista['genres'],
                 datos_artista['artist_popularity'],
                 datos_artista['followers']
             ])
             
     print(x.get_string())
     
+def print_requerimiento2(lista, n):
+    x = PrettyTable()
+    x.field_names = ['artist_popularity', 'followers', 'name', 'relevant_track_name', 'genres']
+    for _ in range(1, n):
+        datos = lt.getElement(lista, _)
+        x.add_row([
+            datos['artist_popularity'],
+            datos['followers'],
+            datos['name'],
+            controller.buscarCancionPorID(control, datos['track_id']),
+            datos['genres']        
+        ])
+    print(x.get_string())
+
 
 def print_albumFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
     x = PrettyTable()
@@ -207,9 +220,13 @@ while True:
 
 
     elif int(inputs[0]) == 3:
-        organized = controller.ordenamientoMerge_Requerimiento2(control)
-        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(organized, controller.listSize(organized))
+        n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
+        organized = controller.ordenamientoShell_Requerimiento2(control)
+        top_n = lt.subList(organized, 1, n)
+        print_requerimiento2(top_n, controller.listSize(top_n))
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.listSize(top_n))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
+
     elif int(inputs[0]) == 4:
         pass
     elif int(inputs[0]) == 5:
