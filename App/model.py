@@ -252,7 +252,7 @@ def newTrack(
     track['tempo'] = tempo
     track['duration_ms'] = duration_ms
     track['acousticness'] = acousticness
-    track['available_markets'] = available_markets
+    track['available_markets'] = (available_markets.replace("[", "").replace("]", "").replace("'", "")).split(",")
     track['lyrics'] = lyrics
     track['disc_number'] = disc_number
     track['instrumentalness'] = instrumentalness
@@ -282,10 +282,10 @@ def newArtist(
 
     artist['id'] = id
     artist['track_id'] = track_id
-    artist['artist_popularity'] = artist_popularity
-    artist['genres'] = genres
-    artist['name'] = name
-    artist['followers'] = followers
+    artist['artist_popularity'] = float(artist_popularity)
+    artist['genres'] = (genres.replace("[", "").replace("]", "").replace("'", "")).split(",")
+    artist['name'] = str(name)
+    artist['followers'] = float(followers)
 
     return artist
 
@@ -304,8 +304,6 @@ def firstThreeLastThree(list, list_size):
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
     elementToFind = int(elementToFind)
-    if lst_size == 0:
-        return -1
  
     # Since array is sorted, an element present
     # in array must be in range defined by corner
@@ -345,11 +343,11 @@ def binarySearch(lst, elemento, elementoDiccionario):
         mid = (high + low) // 2
  
         # If x is greater, ignore left half
-        if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < int(elemento):
+        if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < elemento:
             low = mid + 1
  
         # If x is smaller, ignore right half
-        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > int(elemento):
+        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > elemento:
             high = mid - 1
  
         # means x is present at mid
@@ -381,6 +379,8 @@ def ordenamientoQuick(control, criterio, cmpfunction):
     return quicksort.sort(control["model"][criterio], cmpfunction)
 
 
+
+
 # Funciones de comparacion
 
 def cmpArtistsByFollowers(artist1, artist2): 
@@ -391,7 +391,18 @@ def cmpYears(date1, date2):
     return (date1["release_date"].year < date2["release_date"].year)
 
 def cmpArtistsPopularity(artist1, artists2):
-    return artist1["artist_popularity"] > artists2["artist_popularity"]
+    if artist1["artist_popularity"] != artists2["artist_popularity"]:
+        return artist1["artist_popularity"] > artists2["artist_popularity"]
+    elif artist1["followers"] != artists2["followers"]:
+        return artist1["followers"] > artists2["followers"]
+    else:
+        artist1["name"] > artists2["name"]
+
+def cmpIDTracks(artist1, artist2):
+    return artist1["id"] < artist2["id"]
+
+
+
 
 
 # Funciones para medir tiempos de ejecucion

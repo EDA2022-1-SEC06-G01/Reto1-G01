@@ -21,6 +21,7 @@
  """
 
 from matplotlib import artist
+from DISClib.ADT import list as lt
 import config as cf
 import model
 import csv
@@ -101,8 +102,9 @@ def ordenamientoMerge(control, criterio, funcion):
 def ordenamientoMerge_Requerimiento1(control):
   return model.ordenamientoMerge(control, "albums", model.cmpYears)
 
-def ordenamientoMerge_Requerimiento2(control):
-  return model.ordenamientoMerge(control, "artists", model.cmpArtistsPopularity)
+def ordenamientoShell_Requerimiento2(control):
+  return model.ordenamientoShell(control, "artists", model.cmpArtistsPopularity)
+
 
   # Implementaciones ordenamiento QuickSort
 def ordenamientoQuick(control, criterio, funcion):
@@ -124,3 +126,10 @@ def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, prime
 def cmpArtistsByFollowers(artist1, artist2):
   return model.cmpArtistsByFollowers(artist1, artist2)
 
+def buscarCancionPorID(control, elementoBuscado):
+  lista_ordenada = model.ordenamientoShell(control, "tracks", model.cmpIDTracks)
+  index = model.binarySearch(lista_ordenada, elementoBuscado, "id")
+  if index == -1:
+    return "Not found"
+  else:
+    return lt.getElement(lista_ordenada, index)["name"]
