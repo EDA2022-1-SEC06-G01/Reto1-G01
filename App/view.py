@@ -170,6 +170,21 @@ def print_trackFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
 
     print(x.get_string())
 
+def print_Requerimiento4(lst):
+    datos = lt.getElement(lst, 1)
+    x = PrettyTable()
+    x.field_names = ['name', 'album_name', 'artists', 'duration_ms', 'popularity', 'preview_url', 'lyrics']
+    lista_nombreArtistas = controller.listaArtistas_IDaNombre(control, datos['artists_id'])
+    x.add_row([
+        datos['name'],
+        controller.albumName_Requerimiento4(control, datos['album_id']),
+        lista_nombreArtistas,
+        datos['duration_ms'],
+        datos['popularity'],
+        datos['preview_url'],
+        "Letra de la canción NO disponible" if datos['lyrics'] == "-99" else datos['lyrics']
+            ])
+    print(x.get_string())
 
 control = newController("SINGLE_LINKED")
 """
@@ -211,7 +226,7 @@ while True:
 
     elif int(inputs[0]) == 2:
         inicial, final = input("fechas con espacio: ").split()
-        organized = controller.ordenamientoMerge_Requerimiento1(control)
+        organized = controller.ordenamientoShell(control, model.cmpYears)
         index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
         index_anio_final = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
         sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
@@ -221,14 +236,26 @@ while True:
 
     elif int(inputs[0]) == 3:
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
-        organized = controller.ordenamientoShell_Requerimiento2(control)
+        organized = controller.cmpYears(control, model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
         print_requerimiento2(top_n, controller.listSize(top_n))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.listSize(top_n))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
 
     elif int(inputs[0]) == 4:
-        pass
+        artista = input("Inserte el nombre del artista: ")
+        mercado = input("Nombre de país/mercado disponible de la canción: ")
+        idArtista = controller.buscarIDArtista(control, artista)
+        cantidadCancionesArtista, cancionesDeArtista = controller.linearSearch_Requerimiento4(control["model"]["tracks"], idArtista, mercado)
+        canciones_organizadas = controller.ordenamientoShell(cancionesDeArtista, model.cmpTrackPopularity_duration_name)
+        cantidadAlbunesArtista = controller.contador_elementos(control["model"]["albums"], idArtista)
+        print(f"El número total de canciones del artista {artista} es: {cantidadCancionesArtista}")
+        print(f"El número de álbumes asociados a el artista {artista} es: {cantidadAlbunesArtista}")
+        print_Requerimiento4(canciones_organizadas)
+
+        
+
+
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:
@@ -236,23 +263,23 @@ while True:
         criterio = "artists"
         funcion = controller.cmpArtistsByFollowers
         if tipo.lower() == "selection":
-            tiempo, organizado = controller.ordenamientoSelection(control, criterio, funcion)
+            tiempo, organizado = controller.ordenamientoSelection(control["model"][criterio], funcion)
             print(f"El tiempo que tomo el ordenamiento Selection en organizar los datos fue {tiempo}")
 
         elif tipo.lower() == "insertion":
-            tiempo, organizado = controller.ordenamientoInsetion(control, criterio, funcion)
+            tiempo, organizado = controller.ordenamientoInsetion(control["model"][criterio], funcion)
             print(f"El tiempo que tomo el ordenamiento Insertion en organizar los datos fue {tiempo}")
 
         elif tipo.lower() == "shell":
-            tiempo, organizado = controller.ordenamientoShell(control, criterio, funcion)
+            tiempo, organizado = controller.ordenamientoShell(control["model"][criterio], funcion)
             print(f"El tiempo que tomo el ordenamiento Shell en organizar los datos fue {tiempo}")
 
         elif tipo.lower() == "merge":
-             tiempo, organizado = controller.ordenamientoMerge(control, criterio, funcion)
+             tiempo, organizado = controller.ordenamientoMerge(control["model"][criterio], funcion)
              print(f"El tiempo que tomo el ordenamiento Merge en organizar los datos fue {tiempo}")
 
         elif tipo.lower() == "quick":
-             tiempo, organizado = controller.ordenamientoQuick(control, criterio, funcion)
+             tiempo, organizado = controller.ordenamientoQuick(control["model"][criterio], funcion)
              print(f"El tiempo que tomo el ordenamiento Quick en organizar los datos fue {tiempo}")
 
         else: 

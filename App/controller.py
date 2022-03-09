@@ -83,32 +83,22 @@ def loadTracks(tamanio_archivo, control):
 
 # Funciones para la creacion de datos
 
+
 # Funciones de ordenamiento
-def ordenamientoSelection(control, criterio, funcion):
-  return model.ordenamientoSelection(control, criterio, funcion)
+def ordenamientoSelection(control, funcion):
+  return model.ordenamientoSelection(control, funcion)
 
+def ordenamientoInsetion(control, funcion):
+  return model.ordenamientoInsetion(control, funcion)
 
-def ordenamientoInsetion(control, criterio, funcion):
-  return model.ordenamientoInsetion(control, criterio, funcion)
+def ordenamientoShell(control, funcion):
+  return model.ordenamientoShell(control, funcion)
 
+def ordenamientoMerge(control, funcion):
+  return model.ordenamientoMerge(control, funcion)
 
-def ordenamientoShell(control, criterio, funcion):
-  return model.ordenamientoShell(control, criterio, funcion)
-
-  # Implementaciones ordenamiento MergeSort
-def ordenamientoMerge(control, criterio, funcion):
-  return model.ordenamientoMerge(control, criterio, funcion)
-
-def ordenamientoMerge_Requerimiento1(control):
-  return model.ordenamientoMerge(control, "albums", model.cmpYears)
-
-def ordenamientoShell_Requerimiento2(control):
-  return model.ordenamientoShell(control, "artists", model.cmpArtistsPopularity)
-
-
-  # Implementaciones ordenamiento QuickSort
-def ordenamientoQuick(control, criterio, funcion):
-  return model.ordenamientoQuick(control, criterio, funcion)
+def ordenamientoQuick(control, funcion):
+  return model.ordenamientoQuick(control, funcion)
 
 # Funciones de consulta sobre el catálogo
 
@@ -122,6 +112,20 @@ def listSize(list):
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
   return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo)
 
+def binarySearch(lst, elemento, elementoDiccionario):
+  return model.binarySearch(lst, elemento, elementoDiccionario)
+
+# generalizarlo
+def binarySearchLimites_tracks(control, elemento, primeroUltimo):
+  return model.binarySearchLimites(control["model"]["tracks"], elemento, "artists_id", primeroUltimo)
+
+def linearSearch_Requerimiento4(lst, element, mercado):
+  return model.linearSearch_Requerimiento4(lst, element, mercado)
+
+def contador_elementos(lst, element):
+  return model.contador_elementos(lst, element)
+
+
 # Funciones de comparacion
 def cmpArtistsByFollowers(artist1, artist2):
   return model.cmpArtistsByFollowers(artist1, artist2)
@@ -133,3 +137,20 @@ def buscarCancionPorID(control, elementoBuscado):
     return "Not found"
   else:
     return lt.getElement(lista_ordenada, index)["name"]
+def albumName_Requerimiento4(control, elemento):
+  return lt.getElement(control["model"]["albums"] ,binarySearch(control['model']['albums'], elemento, "id"))["name"]
+
+def listaArtistas_IDaNombre(control, lista_artistas):
+  lista = model.ordenamientoShell(control["model"]["artists"] , model.cmpArtistsID_tracksID)
+  string = ""
+  for i in lista_artistas:
+    string += lt.getElement(lista, binarySearch(lista, i, "id"))["name"] + ", "
+  return string[:-2]
+
+def buscarIDArtista(control, elementoBuscado):
+  lista_ordenada = model.ordenamientoShell(control["model"]["artists"] , model.cmpArtistsByName)
+  index = model.binarySearch(lista_ordenada, elementoBuscado, "name")
+  if index == -1:
+    return "Not found"
+  else:
+    return lt.getElement(lista_ordenada, index)["id"]
