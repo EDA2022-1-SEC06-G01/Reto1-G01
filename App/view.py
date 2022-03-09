@@ -253,7 +253,7 @@ while True:
 
     elif int(inputs[0]) == 3:
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
-        organized = controller.cmpYearsMenorMayor(control, model.cmpArtistsPopularity)
+        organized = controller.ordenamientoShell(control["model"]["artistsb"], model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
         print_requerimiento2(top_n, controller.listSize(top_n))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.listSize(top_n))

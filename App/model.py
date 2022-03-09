@@ -497,6 +497,9 @@ def cmpAvailableMarkets_popularity_name(track1, track2):
     else:
         track1["name"] > track2["name"]
 
+def cmpAlbumsIDs(album1, album2):
+    return album1["id"] < album2["id"]
+
 
 # Funciones para medir tiempos de ejecucion
 

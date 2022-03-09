@@ -136,14 +136,16 @@ def cmpArtistsByFollowers(artist1, artist2):
   return model.cmpArtistsByFollowers(artist1, artist2)
 
 def buscarCancionPorID(control, elementoBuscado):
-  lista_ordenada = model.ordenamientoShell(control, "tracks", model.cmpIDTracks)
+  lista_ordenada = model.ordenamientoShell(control["model"]["albums"], "tracks", model.cmpIDTracks)
   index = model.binarySearch(lista_ordenada, elementoBuscado, "id")
   if index == -1:
     return "Not found"
   else:
     return lt.getElement(lista_ordenada, index)["name"]
+
 def albumName_Requerimiento4(control, elemento):
-  return lt.getElement(control["model"]["albums"] ,binarySearch(control['model']['albums'], elemento, "id"))["name"]
+  lista = model.ordenamientoShell(control["model"]["albums"], model.cmpAlbumsIDs)
+  return lt.getElement(lista ,binarySearch(lista, elemento, "id"))["name"]
 
 def listaArtistas_IDaNombre(control, lista_artistas):
   lista = model.ordenamientoShell(control["model"]["artists"] , model.cmpArtistsID_tracksID)
