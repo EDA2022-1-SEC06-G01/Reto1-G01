@@ -83,6 +83,11 @@ def loadTracks(tamanio_archivo, control):
 
 # Funciones para la creacion de datos
 
+def getAlbumID(lst) -> list:
+  return model.getAlbumID(lst)
+
+def linearSearch_Requerimiento6(lst, AlbumIDList):
+  return model.linearSearch_Requerimiento6(lst, AlbumIDList)
 
 # Funciones de ordenamiento
 def ordenamientoSelection(control, funcion):
@@ -91,8 +96,8 @@ def ordenamientoSelection(control, funcion):
 def ordenamientoInsetion(control, funcion):
   return model.ordenamientoInsetion(control, funcion)
 
-def ordenamientoShell(control, funcion):
-  return model.ordenamientoShell(control, funcion)
+def ordenamientoShell(lst, funcion):
+  return model.ordenamientoShell(lst, funcion)
 
 def ordenamientoMerge(control, funcion):
   return model.ordenamientoMerge(control, funcion)
@@ -131,14 +136,16 @@ def cmpArtistsByFollowers(artist1, artist2):
   return model.cmpArtistsByFollowers(artist1, artist2)
 
 def buscarCancionPorID(control, elementoBuscado):
-  lista_ordenada = model.ordenamientoShell(control, "tracks", model.cmpIDTracks)
+  lista_ordenada = model.ordenamientoShell(control["model"]["albums"], "tracks", model.cmpIDTracks)
   index = model.binarySearch(lista_ordenada, elementoBuscado, "id")
   if index == -1:
     return "Not found"
   else:
     return lt.getElement(lista_ordenada, index)["name"]
+
 def albumName_Requerimiento4(control, elemento):
-  return lt.getElement(control["model"]["albums"] ,binarySearch(control['model']['albums'], elemento, "id"))["name"]
+  lista = model.ordenamientoShell(control["model"]["albums"], model.cmpAlbumsIDs)
+  return lt.getElement(lista ,binarySearch(lista, elemento, "id"))["name"]
 
 def listaArtistas_IDaNombre(control, lista_artistas):
   lista = model.ordenamientoShell(control["model"]["artists"] , model.cmpArtistsID_tracksID)
