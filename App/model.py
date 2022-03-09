@@ -173,7 +173,7 @@ def newAlbum(
     album['total_tracks'] = total_tracks
     album['external_urls'] = external_urls
     album['album_type'] = album_type
-    album['available_markets'] = available_markets
+    album['available_markets'] = (available_markets.replace("[", "").replace("]", "").replace("'", "").replace('"', "")).split(",")
     album['artist_id'] = artist_id
     album['images'] = images
     album['release_date'] = datetime.datetime.strptime(release_date, "%Y-%m-%d") if (len(release_date) == 10) else (datetime.datetime.strptime(release_date[:4] + "19" + release_date[-2:], "%b-%Y") if (len(release_date) == 6) else (datetime.datetime.strptime(release_date, '%Y')))
@@ -254,6 +254,7 @@ def newTrack(
     track['duration_ms'] = duration_ms
     track['acousticness'] = acousticness
     track['available_markets'] = available_markets
+    track['available_markets_size'] = len(available_markets)
     track['lyrics'] = lyrics
     track['disc_number'] = disc_number
     track['instrumentalness'] = instrumentalness
@@ -390,6 +391,14 @@ def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
     # If we reach here, then the element was not present
     return -1
 
+def getAlbumID(lst) -> list:
+    AlbumIDList = []
+    for i in lt.iterator(lst):
+        AlbumIDList.append(i["id"])
+
+    return AlbumIDList
+
+
 def linearSearch_Requerimiento4(lst, element, mercado):
     subLista = lt.newList("ARRAY_LIST")
     contador = 0
@@ -400,6 +409,15 @@ def linearSearch_Requerimiento4(lst, element, mercado):
             lt.addLast(subLista, lt.getElement(lst, i))
   
     return contador, subLista
+
+
+def linearSearch_Requerimiento6(lst, AlbumIDList):
+    subLista = lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lst):
+        if (i["album_id"] in AlbumIDList):
+            lt.addLast(subLista, i)
+            
+    return subLista
 
 def contador_elementos(lst, element):
     contador = 0 
@@ -437,8 +455,11 @@ def cmpArtistsByFollowers(artist1, artist2):
     """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
     return artist1["followers"] < artist2["followers"]
 
-def cmpYears(date1, date2):
+def cmpYearsMenorMayor(date1, date2):
     return (date1["release_date"].year < date2["release_date"].year)
+
+def cmpYearsMayorMenor(date1, date2):
+    return (date1["release_date"].year > date2["release_date"].year)
 
 def cmpArtistsPopularity(artist1, artists2):
     if artist1["artist_popularity"] != artists2["artist_popularity"]:
@@ -468,6 +489,13 @@ def cmpTrackPopularity_duration_name(track1, track2):
     else:
         track1["name"] > track2["name"]
     
+def cmpAvailableMarkets_popularity_name(track1, track2):
+    if track1["available_markets_size"] != track2["available_markets_size"]:
+            return track1["available_markets_size"] > track2["available_markets_size"]
+    elif track1["popularity"] != track2["popularity"]:
+        return track1["popularity"] > track2["popularity"]
+    else:
+        track1["name"] > track2["name"]
 
 
 # Funciones para medir tiempos de ejecucion

@@ -83,6 +83,11 @@ def loadTracks(tamanio_archivo, control):
 
 # Funciones para la creacion de datos
 
+def getAlbumID(lst) -> list:
+  return model.getAlbumID(lst)
+
+def linearSearch_Requerimiento6(lst, AlbumIDList):
+  return model.linearSearch_Requerimiento6(lst, AlbumIDList)
 
 # Funciones de ordenamiento
 def ordenamientoSelection(control, funcion):
@@ -91,8 +96,8 @@ def ordenamientoSelection(control, funcion):
 def ordenamientoInsetion(control, funcion):
   return model.ordenamientoInsetion(control, funcion)
 
-def ordenamientoShell(control, funcion):
-  return model.ordenamientoShell(control, funcion)
+def ordenamientoShell(lst, funcion):
+  return model.ordenamientoShell(lst, funcion)
 
 def ordenamientoMerge(control, funcion):
   return model.ordenamientoMerge(control, funcion)

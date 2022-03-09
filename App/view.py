@@ -186,6 +186,23 @@ def print_Requerimiento4(lst):
             ])
     print(x.get_string())
 
+def print_Requerimiento6(lst, n):
+    x = PrettyTable()
+    x.field_names = ['name', 'album_name', 'artists', 'avaliable_markets', 'popularity', 'duration_ms']
+    
+
+    for dato in lt.iterator(lst):
+        lista_nombreArtistas = controller.listaArtistas_IDaNombre(control, dato['artists_id'])
+        x.add_row([
+            dato['name'],
+            controller.albumName_Requerimiento4(control, dato['album_id']),
+            lista_nombreArtistas,
+            dato['available_markets_size'],
+            dato['popularity'],
+            dato['duration_ms']
+                ])
+    print(x.get_string())
+
 control = newController("SINGLE_LINKED")
 """
 Menu principal
@@ -226,7 +243,7 @@ while True:
 
     elif int(inputs[0]) == 2:
         inicial, final = input("fechas con espacio: ").split()
-        organized = controller.ordenamientoShell(control, model.cmpYears)
+        organized = controller.ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
         index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
         index_anio_final = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
         sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
@@ -236,13 +253,19 @@ while True:
 
     elif int(inputs[0]) == 3:
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
-        organized = controller.cmpYears(control, model.cmpArtistsPopularity)
+        organized = controller.cmpYearsMenorMayor(control, model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
         print_requerimiento2(top_n, controller.listSize(top_n))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.listSize(top_n))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
 
     elif int(inputs[0]) == 4:
+        pass
+
+        
+
+
+    elif int(inputs[0]) == 5:
         artista = input("Inserte el nombre del artista: ")
         mercado = input("Nombre de país/mercado disponible de la canción: ")
         idArtista = controller.buscarIDArtista(control, artista)
@@ -253,12 +276,21 @@ while True:
         print(f"El número de álbumes asociados a el artista {artista} es: {cantidadAlbunesArtista}")
         print_Requerimiento4(canciones_organizadas)
 
-        
-
-
-    elif int(inputs[0]) == 5:
-        pass
     elif int(inputs[0]) == 6:
+        anio_inicial = int(input("Año inicial del periodo: "))
+        anio_final = int(input("Año final del periodo: "))
+        n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
+        organizedAlbumsByYear = controller.ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
+        anio_inicial_index = controller.interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, controller.listSize(organizedAlbumsByYear), anio_inicial, True)
+        anio_final_index = controller.interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, controller.listSize(organizedAlbumsByYear), anio_final, False)
+        sublista = lt.subList(organizedAlbumsByYear, anio_inicial_index, anio_final_index-anio_inicial_index)
+        getAlbumIDList = controller.getAlbumID(sublista)
+        canciones = controller.linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
+        organizarCanciones_available_markets = controller.ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
+        print_Requerimiento6(organizarCanciones_available_markets, n)
+
+
+    elif int(inputs[0]) == 7:
         tipo = input("Escoje un tipo de ordenamiento (selection, insertion, shell, merge o quick): ")
         criterio = "artists"
         funcion = controller.cmpArtistsByFollowers
@@ -285,9 +317,9 @@ while True:
         else: 
             print("Intente un nombre válido")
 
-    elif int(inputs[0]) == 7:
-        pass
     elif int(inputs[0]) == 8:
+        pass
+    elif int(inputs[0]) == 9:
         pass
     else:
         sys.exit(0)
