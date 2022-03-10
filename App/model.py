@@ -301,11 +301,16 @@ def firstThreeLastThree(list, list_size):
     lastThree = lt.subList(list, list_size-2, 3)
     return firstThree, lastThree
 
+def buscarTracksTOP(lst, top):
+    TOPtracks = lt.newList(lst, 1, top)
+    return TOPtracks
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
     elementToFind = int(elementToFind)
     if lst_size == 0:
         return -1
+
+
  
     # Since array is sorted, an element present
     # in array must be in range defined by corner
@@ -392,6 +397,22 @@ def cmpYears(date1, date2):
 
 def cmpArtistsPopularity(artist1, artists2):
     return artist1["artist_popularity"] > artists2["artist_popularity"]
+
+def cmpTracksPopularity(track1, track2):
+    a = track1["popularity"] <  track2["popularity"]
+    """if track1["popularity"] == track2["popularity"]:
+        a = track1["duration_ms"] > track2["duration_ms"]
+
+        if track1["duration_ms"] == track2["duration_ms"]:
+           a = track1["name"] > track2["name"]
+"""
+    return track1["popularity"] >  track2["popularity"]
+
+def cmpArtistsByName(artist1, artist2):
+    return artist1["name"] < artist2["name"]
+
+def cmpArtistsID_tracksID(artist1, artist2):
+    return artist1["id"] < artist2["id"]
 
 
 # Funciones para medir tiempos de ejecucion

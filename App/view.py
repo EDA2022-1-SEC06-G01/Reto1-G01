@@ -157,7 +157,25 @@ def print_trackFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
 
     print(x.get_string())
 
-
+def print_requerimiento3(lista_top, top):
+    x = PrettyTable()
+    x.field_names = ['name', 'album', 'artists', 'popularity', 'duration_ms', 'href','lyrics']
+        
+    for i in range(0, len(lista_top)):
+        datos_tracks = lt.getElement(lista_top, i)
+        x.add_row([
+            datos_tracks['name'],
+            datos_tracks['album_id'],
+            #controller.listaArtistasID(control, datos_tracks['artists_id']),
+            datos_tracks['artists_id'],
+            datos_tracks['popularity'],
+            datos_tracks['duration_ms'],
+            datos_tracks['href'][:15],
+            datos_tracks['lyrics'][:15],
+            
+         ])
+    print(x.get_string)
+    
 control = newController("SINGLE_LINKED")
 """
 Menu principal
@@ -210,8 +228,13 @@ while True:
         organized = controller.ordenamientoMerge_Requerimiento2(control)
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(organized, controller.listSize(organized))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
+
     elif int(inputs[0]) == 4:
-        pass
+        top = int(input("Ingrese el numero de las canciones más famosa, que desea conocer:"))
+        canciones = controller.BuscarTracksTOP(control, top)
+        #print(canciones)
+        print_requerimiento3(canciones,top)
+
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:

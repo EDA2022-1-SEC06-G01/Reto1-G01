@@ -21,6 +21,7 @@
  """
 
 from matplotlib import artist
+from DISClib.ADT import list as lt
 import config as cf
 import model
 import csv
@@ -120,7 +121,28 @@ def listSize(list):
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
   return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo)
 
+def BuscarTracksTOP(control, top):
+  criterio = "tracks"
+  ordenado = ordenamientoMerge(control, criterio, cmpTracksPopularity)
+  TopTracks = model.buscarTracksTOP(ordenado, top)
+  return TopTracks
+
+def listaArtistasID(lst, datos):
+  
+  lista = model.ordenamientoMerge(lst,"artists", (model.cmpArtistsID_tracksID,))
+  string = ""
+  for i in datos:
+    string += lt.getElement(lista, model.binarySearch(lista, i, "id"))["name"] + ", "
+  return string
+
+  
+
 # Funciones de comparacion
 def cmpArtistsByFollowers(artist1, artist2):
   return model.cmpArtistsByFollowers(artist1, artist2)
+
+def cmpTracksPopularity(track1, track2):
+  return model.cmpTracksPopularity(track1, track2)
+
+
 
