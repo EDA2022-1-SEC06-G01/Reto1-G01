@@ -121,8 +121,7 @@ def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, prime
   return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo)
 
 def BuscarTracksTOP(control, top):
-  criterio = "tracks"
-  ordenado = ordenamientoMerge(control, criterio, cmpTracksPopularity)
+  ordenado = model.ordenamientoMerge(control["model"]["tracks"], model.cmpTracksPopularity)
   TopTracks = model.buscarTracksTOP(ordenado, top)
   return TopTracks
 

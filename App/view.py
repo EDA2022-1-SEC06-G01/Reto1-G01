@@ -174,7 +174,7 @@ def print_requerimiento3(lista_top, top):
     x = PrettyTable()
     x.field_names = ['name', 'album', 'artists', 'popularity', 'duration_ms', 'href','lyrics']
         
-    for i in range(0, len(lista_top)):
+    for i in range(1, len(lista_top)):
         datos_tracks = lt.getElement(lista_top, i)
         x.add_row([
             datos_tracks['name'],
@@ -321,7 +321,7 @@ while True:
 
     elif int(inputs[0]) == 3:
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
-        organized = controller.ordenamientoShell(control["model"]["artistsb"], model.cmpArtistsPopularity)
+        organized = controller.ordenamientoShell(control["model"]["artists"], model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
         print_requerimiento2(top_n, controller.listSize(top_n))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.listSize(top_n))

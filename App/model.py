@@ -249,7 +249,7 @@ def newTrack(
     track['danceability'] = danceability
     track['playlist'] = playlist
     track['speechiness'] = speechiness
-    track['popularity'] = popularity
+    track['popularity'] = float(popularity)
     track['liveness'] = liveness
     track['tempo'] = tempo
     track['duration_ms'] = duration_ms
@@ -317,7 +317,7 @@ def firstThreeLastThree(list, list_size):
     return firstThree, lastThree
 
 def buscarTracksTOP(lst, top):
-    TOPtracks = lt.newList(lst, 1, top)
+    TOPtracks = lt.subList(lst, 1, top)
     return TOPtracks
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
@@ -521,13 +521,6 @@ def cmpAlbumsIDs(album1, album2):
     return album1["id"] < album2["id"]
 
 def cmpTracksPopularity(track1, track2):
-    a = track1["popularity"] <  track2["popularity"]
-    """if track1["popularity"] == track2["popularity"]:
-        a = track1["duration_ms"] > track2["duration_ms"]
-
-        if track1["duration_ms"] == track2["duration_ms"]:
-           a = track1["name"] > track2["name"]
-"""
     return track1["popularity"] >  track2["popularity"]
 
 def cmpArtistsByName(artist1, artist2):
