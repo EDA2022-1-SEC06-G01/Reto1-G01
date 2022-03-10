@@ -173,7 +173,7 @@ def newAlbum(
     album['total_tracks'] = total_tracks
     album['external_urls'] = external_urls
     album['album_type'] = album_type
-    album['available_markets'] = available_markets
+    album['available_markets'] = (available_markets.replace("[", "").replace("]", "").replace("'", "").replace('"', "")).split(",")
     album['artist_id'] = artist_id
     album['images'] = images
     album['release_date'] = datetime.datetime.strptime(release_date, "%Y-%m-%d") if (len(release_date) == 10) else (datetime.datetime.strptime(release_date[:4] + "19" + release_date[-2:], "%b-%Y") if (len(release_date) == 6) else (datetime.datetime.strptime(release_date, '%Y')))
@@ -228,19 +228,20 @@ def newTrack(
         'duration_ms': '',
         'acousticness': '',
         'available_markets': '',
+        'available_markets_size': '',
         'lyrics': '',
         'disc_number': '',
         'instrumentalness': '',
         'preview_url': '',
         'name': ''
             }
-
+    available_markets = (available_markets.replace("[", "").replace("]", "").replace("'", "").replace('"', "")).split(",")
     track['id'] = id
     track['href'] = href
     track['album_id'] = album_id
     track['key'] = key
     track['track_number'] = track_number
-    track['artists_id'] = artists_id
+    track['artists_id'] = (artists_id.replace("[", "").replace("]", "").replace("'", "").replace(" ", "")).split(",")
     track['energy'] = energy
     track['loudness'] = loudness
     track['valence'] = valence
@@ -253,6 +254,7 @@ def newTrack(
     track['duration_ms'] = duration_ms
     track['acousticness'] = acousticness
     track['available_markets'] = available_markets
+    track['available_markets_size'] = len(available_markets)
     track['lyrics'] = lyrics
     track['disc_number'] = disc_number
     track['instrumentalness'] = instrumentalness
@@ -282,10 +284,10 @@ def newArtist(
 
     artist['id'] = id
     artist['track_id'] = track_id
-    artist['artist_popularity'] = artist_popularity
-    artist['genres'] = genres
-    artist['name'] = name
-    artist['followers'] = followers
+    artist['artist_popularity'] = float(artist_popularity)
+    artist['genres'] = (genres.replace("[", "").replace("]", "").replace("'", "")).split(",")
+    artist['name'] = str(name)
+    artist['followers'] = float(followers)
 
     return artist
 
@@ -307,10 +309,6 @@ def buscarTracksTOP(lst, top):
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
     elementToFind = int(elementToFind)
-    if lst_size == 0:
-        return -1
-
-
  
     # Since array is sorted, an element present
     # in array must be in range defined by corner
@@ -350,11 +348,11 @@ def binarySearch(lst, elemento, elementoDiccionario):
         mid = (high + low) // 2
  
         # If x is greater, ignore left half
-        if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < int(elemento):
+        if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < elemento:
             low = mid + 1
  
         # If x is smaller, ignore right half
-        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > int(elemento):
+        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > elemento:
             high = mid - 1
  
         # means x is present at mid
@@ -365,25 +363,93 @@ def binarySearch(lst, elemento, elementoDiccionario):
     return -1
 
 
+def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
+    low = 1
+    high = lt.size(lst)
+    mid = 0
+ 
+    while low <= high:
+ 
+        mid = (high + low) // 2
+ 
+        # If x is greater, ignore left half
+        if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < elemento:
+            low = mid + 1
+            
+ 
+        # If x is smaller, ignore right half
+        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > elemento:
+            high = mid - 1
+ 
+        # means x is present at mid
+        else:
+            if primeroUltimo == True:
+                while lt.getElement(lst, mid-1)[f"{elementoDiccionario}"] == elemento:
+                    mid -= 1
+            else:
+                while lt.getElement(lst, mid)[f"{elementoDiccionario}"] == elemento:
+                    mid += 1
+            return mid
+ 
+    # If we reach here, then the element was not present
+    return -1
+
+def getAlbumID(lst) -> list:
+    AlbumIDList = []
+    for i in lt.iterator(lst):
+        AlbumIDList.append(i["id"])
+
+    return AlbumIDList
+
+
+def linearSearch_Requerimiento4(lst, element, mercado):
+    subLista = lt.newList("ARRAY_LIST")
+    contador = 0
+    for i in range(1, lt.size(lst)):
+        if (element in lt.getElement(lst, i)["artists_id"]):
+            contador += 1
+        if (element in lt.getElement(lst, i)["artists_id"]) and (mercado in lt.getElement(lst, i)['available_markets']):
+            lt.addLast(subLista, lt.getElement(lst, i))
+  
+    return contador, subLista
+
+
+def linearSearch_Requerimiento6(lst, AlbumIDList):
+    subLista = lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lst):
+        if (i["album_id"] in AlbumIDList):
+            lt.addLast(subLista, i)
+            
+    return subLista
+
+def contador_elementos(lst, element):
+    contador = 0 
+    for i in range(1, lt.size(lst)):
+        if element == lt.getElement(lst, i)["artist_id"]:
+            contador += 1
+    return contador
+
 # Funciones de ordenamiento
-def ordenamientoSelection(control, criterio, cmpfunction):
-    return selectionsort.sort(control["model"][criterio], cmpfunction)
+def ordenamientoSelection(lst, cmpfunction):
+    return selectionsort.sort(lst, cmpfunction)
     
 
-def ordenamientoInsetion(control, criterio, cmpfunction):
-    return insertionsort.sort(control["model"][criterio], cmpfunction)
+def ordenamientoInsetion(lst, cmpfunction):
+    return insertionsort.sort(lst, cmpfunction)
 
 
-def ordenamientoShell(control, criterio, cmpfunction):
-    return shellsort.sort(control["model"][criterio], cmpfunction)
+def ordenamientoShell(lst, cmpfunction):
+    return shellsort.sort(lst, cmpfunction)
 
 
-def ordenamientoMerge(control, criterio, cmpfunction):
-    return mergesort.sort(control["model"][criterio], cmpfunction)
+def ordenamientoMerge(lst, cmpfunction):
+    return mergesort.sort(lst, cmpfunction)
 
 
-def ordenamientoQuick(control, criterio, cmpfunction):
-    return quicksort.sort(control["model"][criterio], cmpfunction)
+def ordenamientoQuick(lst, cmpfunction):
+    return quicksort.sort(lst, cmpfunction)
+
+
 
 
 # Funciones de comparacion
@@ -392,11 +458,50 @@ def cmpArtistsByFollowers(artist1, artist2):
     """ Devuelve verdadero (True) si los 'followers' de artist1 son menores que los del artist2 Args: artist1: informacion del primer artista que incluye su valor 'followers' artist2: informacion del segundo artista que incluye su valor 'followers' """
     return artist1["followers"] < artist2["followers"]
 
-def cmpYears(date1, date2):
+def cmpYearsMenorMayor(date1, date2):
     return (date1["release_date"].year < date2["release_date"].year)
 
+def cmpYearsMayorMenor(date1, date2):
+    return (date1["release_date"].year > date2["release_date"].year)
+
 def cmpArtistsPopularity(artist1, artists2):
-    return artist1["artist_popularity"] > artists2["artist_popularity"]
+    if artist1["artist_popularity"] != artists2["artist_popularity"]:
+        return artist1["artist_popularity"] > artists2["artist_popularity"]
+    elif artist1["followers"] != artists2["followers"]:
+        return artist1["followers"] > artists2["followers"]
+    else:
+        artist1["name"] > artists2["name"]
+
+def cmpIDTracks(artist1, artist2):
+    return artist1["id"] < artist2["id"]
+
+def cmpArtistsID(artist1, artist2):
+    return artist1["artists_id"] < artist2["artists_id"]
+
+def cmpArtistsID_tracksID(artist1, artist2):
+    return artist1["id"] < artist2["id"]
+
+def cmpArtistsByName(artist1, artist2):
+    return artist1["name"] < artist2["name"]
+
+def cmpTrackPopularity_duration_name(track1, track2):
+    if track1["popularity"] != track2["popularity"]:
+            return track1["popularity"] > track2["popularity"]
+    elif track1["duration_ms"] != track2["duration_ms"]:
+        return track1["duration_ms"] > track2["duration_ms"]
+    else:
+        track1["name"] > track2["name"]
+    
+def cmpAvailableMarkets_popularity_name(track1, track2):
+    if track1["available_markets_size"] != track2["available_markets_size"]:
+            return track1["available_markets_size"] > track2["available_markets_size"]
+    elif track1["popularity"] != track2["popularity"]:
+        return track1["popularity"] > track2["popularity"]
+    else:
+        track1["name"] > track2["name"]
+
+def cmpAlbumsIDs(album1, album2):
+    return album1["id"] < album2["id"]
 
 def cmpTracksPopularity(track1, track2):
     a = track1["popularity"] <  track2["popularity"]
