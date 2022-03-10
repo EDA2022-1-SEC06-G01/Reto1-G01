@@ -41,6 +41,9 @@ def newController(tipo_catalogo):
     }
 
     control['model'] = model.newCatalog(tipo_catalogo)
+    model.ordenamientoShell(control['model']["tracks"], model.cmpTracksIDs)
+    model.ordenamientoShell(control['model']["albums"], model.cmpAlbumsIDs)
+    model.ordenamientoShell(control['model']["artists"], model.cmpArtistsIDs)
     return control
 
 # Funciones para la carga de datos
@@ -130,6 +133,10 @@ def linearSearch_Requerimiento4(lst, element, mercado):
 def contador_elementos(lst, element):
   return model.contador_elementos(lst, element)
 
+def agregarNombreArtista_TrackName(lst, lstArtists, lstTracks):
+  for _ in lt.iterator(lst):
+    ArtistID = _["artist_id"]
+    _["artist_name"] = lt.getElement(lstArtists, binarySearch(lstArtists, ArtistID, "id"))["name"]
 
 # Funciones de comparacion
 def cmpArtistsByFollowers(artist1, artist2):

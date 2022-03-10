@@ -203,6 +203,55 @@ def print_Requerimiento6(lst, n):
                 ])
     print(x.get_string())
 
+def printFirstThreeLastThree_requerimiento5(FirstThree, LastThree):
+    x = PrettyTable()
+    x.field_names = ['release_date', 'album_name', 'total_tracks', 'album_type', 'artist_name']
+
+    if FirstThree:
+        for _ in range(1,4):
+            datos_albums = lt.getElement(FirstThree, _)
+            x.add_row([
+                datos_albums['release_date'],
+                datos_albums['name'],
+                datos_albums['total_tracks'],
+                datos_albums['album_type'],
+                datos_albums['artist_id'],
+            ])
+
+    if LastThree:
+        x.add_row(["...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "...", "..."])
+        for _ in range(1,4):
+            datos_albums = lt.getElement(LastThree, _)
+            x.add_row([
+                datos_albums['release_date'],
+                datos_albums['name'],
+                datos_albums['total_tracks'],
+                datos_albums['album_type'],
+                datos_albums['artist_id'],
+            ])
+    print(x.get_string())
+
+def printCanciones_Requerimiento5(lst):
+    for _ in lt.iterator(lst):
+        x = PrettyTable()
+        x.field_names = ['name', 'artists', 'duration_ms', 'popularity', 'preview_url', 'lyrics']
+        print(f'Most popular track in "{lst["track_name"]}')
+        x.add_row([
+                _['name'],
+                _['artist_id'],
+                _['total_tracks'],
+                _['album_type'],
+                _['artist_id'],
+            ])
+    print(x.get_string())
+
+
+
+
+
+
 control = newController("SINGLE_LINKED")
 """
 Menu principal
@@ -277,6 +326,29 @@ while True:
         print_Requerimiento4(canciones_organizadas)
 
     elif int(inputs[0]) == 6:
+        nombreArtista = input("Nombre del artista: ")
+        idArtista = controller.buscarIDArtista(control, nombreArtista)
+        print(idArtista)
+        listaAlbunesOrganizado_Nombres = controller.ordenamientoShell(control["model"]["albums"], model.cmpArtistID_Albums)
+        indexAlbumArtistas_Inicial = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", True)
+        indexAlbumArtistas_Final = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", False)
+        subLista_albums = lt.subList(listaAlbunesOrganizado_Nombres, indexAlbumArtistas_Inicial, (indexAlbumArtistas_Final, indexAlbumArtistas_Inicial)+1)
+        controller.agregarNombreArtista_TrackName(subLista_albums, control["model"]["artists"])
+
+
+        # Requisito print primeros 3 y ultimos 3
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(subLista_albums, controller.listSize(subLista_albums))
+        printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)
+
+        
+
+        
+
+
+        
+        
+
+    elif int(inputs[0]) == 7:
         anio_inicial = int(input("Año inicial del periodo: "))
         anio_final = int(input("Año final del periodo: "))
         n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
@@ -289,8 +361,7 @@ while True:
         organizarCanciones_available_markets = controller.ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
         print_Requerimiento6(organizarCanciones_available_markets, n)
 
-
-    elif int(inputs[0]) == 7:
+    elif int(inputs[0]) == 8:
         tipo = input("Escoje un tipo de ordenamiento (selection, insertion, shell, merge o quick): ")
         criterio = "artists"
         funcion = controller.cmpArtistsByFollowers

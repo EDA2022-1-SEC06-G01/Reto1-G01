@@ -170,7 +170,7 @@ def newAlbum(
 
     album['id'] = id
     album['track_id'] = track_id
-    album['total_tracks'] = total_tracks
+    album['total_tracks'] = float(total_tracks)
     album['external_urls'] = external_urls
     album['album_type'] = album_type
     album['available_markets'] = (available_markets.replace("[", "").replace("]", "").replace("'", "").replace('"', "")).split(",")
@@ -235,6 +235,7 @@ def newTrack(
         'preview_url': '',
         'name': ''
             }
+
     available_markets = (available_markets.replace("[", "").replace("]", "").replace("'", "").replace('"', "")).split(",")
     track['id'] = id
     track['href'] = href
@@ -290,6 +291,18 @@ def newArtist(
     artist['followers'] = float(followers)
 
     return artist
+
+# Funciones de busqueda de datos para carga
+
+def datosExtras_CargaDeDatos_Albums(lstAlbums, lstTracks, lstArtists):
+    lstAlbums['track_name'] = lt.getElement(lstTracks, binarySearch(lstTracks, ))
+    pass
+
+def datosExtras_CargaDeDatos_Tracks(lstAlbums, lstTracks, lstArtists):
+    pass
+
+def datosExtras_CargaDeDatos_Artists(lstAlbums, lstTracks, lstArtists):
+    pass
 
 
 # Funciones de consulta
@@ -383,10 +396,11 @@ def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
             if primeroUltimo == True:
                 while lt.getElement(lst, mid-1)[f"{elementoDiccionario}"] == elemento:
                     mid -= 1
+                return mid
             else:
                 while lt.getElement(lst, mid)[f"{elementoDiccionario}"] == elemento:
                     mid += 1
-            return mid
+                return mid -1
  
     # If we reach here, then the element was not present
     return -1
@@ -467,7 +481,7 @@ def cmpArtistsPopularity(artist1, artists2):
     elif artist1["followers"] != artists2["followers"]:
         return artist1["followers"] > artists2["followers"]
     else:
-        artist1["name"] > artists2["name"]
+        return artist1["name"] > artists2["name"]
 
 def cmpIDTracks(artist1, artist2):
     return artist1["id"] < artist2["id"]
@@ -478,6 +492,9 @@ def cmpArtistsID(artist1, artist2):
 def cmpArtistsID_tracksID(artist1, artist2):
     return artist1["id"] < artist2["id"]
 
+def cmpArtistID_Albums(album1, album2):
+    return album1["artist_id"] < album2["artist_id"]
+
 def cmpArtistsByName(artist1, artist2):
     return artist1["name"] < artist2["name"]
 
@@ -487,7 +504,7 @@ def cmpTrackPopularity_duration_name(track1, track2):
     elif track1["duration_ms"] != track2["duration_ms"]:
         return track1["duration_ms"] > track2["duration_ms"]
     else:
-        track1["name"] > track2["name"]
+        return track1["name"] > track2["name"]
     
 def cmpAvailableMarkets_popularity_name(track1, track2):
     if track1["available_markets_size"] != track2["available_markets_size"]:
@@ -495,7 +512,7 @@ def cmpAvailableMarkets_popularity_name(track1, track2):
     elif track1["popularity"] != track2["popularity"]:
         return track1["popularity"] > track2["popularity"]
     else:
-        track1["name"] > track2["name"]
+        return track1["name"] > track2["name"]
 
 def cmpAlbumsIDs(album1, album2):
     return album1["id"] < album2["id"]
@@ -517,3 +534,16 @@ def deltaTime(start, end):
     elapsed = float(end - start)
     return elapsed
 
+
+
+
+    """ Desde aca empieza el codigo bueno """
+
+def cmpTracksIDs(FirstTrack, SecondTrack):
+    return FirstTrack["id"] < SecondTrack["id"]
+
+def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
+    return FirstAlbum["id"] < SecondAlbum["id"]
+
+def cmpArtistsIDs(FirstArtist, SecondArtist):
+    return FirstArtist["id"] < SecondArtist["id"]
