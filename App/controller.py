@@ -63,7 +63,7 @@ def loadAlbums(tamanio_archivo, control):
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for album in reader:
       model.addAlbum(control, album)
-    return model.listSize(control["model"]['albums'])
+    return model.size(control["model"]['albums'])
     
 
 def loadArtists(tamanio_archivo, control):
@@ -72,7 +72,7 @@ def loadArtists(tamanio_archivo, control):
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for artist in reader:
       model.addArtists(control, artist)
-    return model.listSize(control["model"]['artists'])
+    return model.size(control["model"]['artists'])
 
 
 def loadTracks(tamanio_archivo, control):
@@ -81,7 +81,7 @@ def loadTracks(tamanio_archivo, control):
     reader = csv.DictReader(open(albumsfile, encoding='utf8'))
     for track in reader:
       model.addTrack(control, track)
-    return model.listSize(control["model"]['tracks'])
+    return model.size(control["model"]['tracks'])
 
 
 # Funciones para la creacion de datos
@@ -92,30 +92,9 @@ def getAlbumID(lst) -> list:
 def linearSearch_Requerimiento6(lst, AlbumIDList):
   return model.linearSearch_Requerimiento6(lst, AlbumIDList)
 
-# Funciones de ordenamiento
-def ordenamientoSelection(control, funcion):
-  return model.ordenamientoSelection(control, funcion)
 
-def ordenamientoInsetion(control, funcion):
-  return model.ordenamientoInsetion(control, funcion)
 
-def ordenamientoShell(lst, funcion):
-  return model.ordenamientoShell(lst, funcion)
 
-def ordenamientoMerge(control, funcion):
-  return model.ordenamientoMerge(control, funcion)
-
-def ordenamientoQuick(control, funcion):
-  return model.ordenamientoQuick(control, funcion)
-
-# Funciones de consulta sobre el catálogo
-
-def FirstThreeLastThree(list, list_size):
-  firstThree, lastThree = model.firstThreeLastThree(list, list_size)
-  return firstThree, lastThree
-
-def listSize(list):
-  return model.listSize(list)
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
   return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo)
@@ -187,3 +166,80 @@ def buscarIDArtista(control, elementoBuscado):
     return "Not found"
   else:
     return lt.getElement(lista_ordenada, index)["id"]
+
+
+
+
+
+
+
+
+
+
+
+    """ Desde aca empieza el codigo bueno """
+
+
+
+# Funcionalidades ADT Crudas
+
+def isEmpty(lst):
+    return model.isEmpty(lst)
+
+def size(lst):
+    return model.size(lst)
+
+def getElement(lst, pos):
+    return model.getElement(lst, pos)
+
+def deleteElement(lst, pos):
+    return model.deleteElement(lst, pos)
+
+def subList(lst, pos, numelem):
+    return model.subList(lst, pos, numelem)
+
+def iterator(lst):
+    return model.iterator(lst)
+
+
+
+# Funciones de ordenamiento
+
+def ordenamientoSelection(control, funcion):
+  return model.ordenamientoSelection(control, funcion)
+
+def ordenamientoInsetion(control, funcion):
+  return model.ordenamientoInsetion(control, funcion)
+
+def ordenamientoShell(lst, funcion):
+  return model.ordenamientoShell(lst, funcion)
+
+def ordenamientoMerge(control, funcion):
+  return model.ordenamientoMerge(control, funcion)
+
+def ordenamientoQuick(control, funcion):
+  return model.ordenamientoQuick(control, funcion)
+
+
+# Funciones de busqueda
+
+def binarySearch(lst, lookingForElement, cmpFunction):
+  return binarySearch(lst, lookingForElement, cmpFunction)
+
+# Funciones para sacar datos
+
+def FirstThreeLastThree(list, list_size):
+  firstThree, lastThree = model.firstThreeLastThree(list, list_size)
+  return firstThree, lastThree
+
+
+# Funciones de comparacion
+
+def cmpTracksIDs(FirstTrack, SecondTrack):
+    return model.cmpTracksIDs(FirstTrack, SecondTrack)
+
+def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
+    return model.cmpAlbumsIDs(FirstAlbum, SecondAlbum)
+
+def cmpArtistsIDs(FirstArtist, SecondArtist):
+    return model.cmpArtistsIDs(FirstArtist, SecondArtist)

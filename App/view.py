@@ -315,7 +315,7 @@ while True:
         index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
         index_anio_final = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
         sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
-        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(sublista, controller.listSize(sublista))
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(sublista, controller.size(sublista))
         print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
 
 
@@ -323,8 +323,8 @@ while True:
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
         organized = controller.ordenamientoShell(control["model"]["artists"], model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
-        print_requerimiento2(top_n, controller.listSize(top_n))
-        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.listSize(top_n))
+        print_requerimiento2(top_n, controller.size(top_n))
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.size(top_n))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
 
     elif int(inputs[0]) == 4:
@@ -356,7 +356,7 @@ while True:
 
 
         # Requisito print primeros 3 y ultimos 3
-        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(subLista_albums, controller.listSize(subLista_albums))
+        albumFirstThree, albumLastThree = controller.FirstThreeLastThree(subLista_albums, controller.size(subLista_albums))
         printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)
 
         
@@ -372,8 +372,8 @@ while True:
         anio_final = int(input("Año final del periodo: "))
         n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
         organizedAlbumsByYear = controller.ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
-        anio_inicial_index = controller.interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, controller.listSize(organizedAlbumsByYear), anio_inicial, True)
-        anio_final_index = controller.interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, controller.listSize(organizedAlbumsByYear), anio_final, False)
+        anio_inicial_index = controller.interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, controller.size(organizedAlbumsByYear), anio_inicial, True)
+        anio_final_index = controller.interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, controller.size(organizedAlbumsByYear), anio_final, False)
         sublista = lt.subList(organizedAlbumsByYear, anio_inicial_index, anio_final_index-anio_inicial_index)
         getAlbumIDList = controller.getAlbumID(sublista)
         canciones = controller.linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)

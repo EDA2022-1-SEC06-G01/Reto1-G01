@@ -250,14 +250,14 @@ def newTrack(
     track['playlist'] = playlist
     track['speechiness'] = speechiness
     track['popularity'] = float(popularity)
-    track['liveness'] = liveness
-    track['tempo'] = tempo
-    track['duration_ms'] = duration_ms
+    track['liveness'] = float(liveness)
+    track['tempo'] = float(tempo)
+    track['duration_ms'] = float(duration_ms)
     track['acousticness'] = acousticness
     track['available_markets'] = available_markets
     track['available_markets_size'] = len(available_markets)
     track['lyrics'] = lyrics
-    track['disc_number'] = disc_number
+    track['disc_number'] = float(disc_number)
     track['instrumentalness'] = instrumentalness
     track['preview_url'] = preview_url
     track['name'] = name
@@ -287,23 +287,10 @@ def newArtist(
     artist['track_id'] = track_id
     artist['artist_popularity'] = float(artist_popularity)
     artist['genres'] = (genres.replace("[", "").replace("]", "").replace("'", "")).split(",")
-    artist['name'] = str(name)
+    artist['name'] = name
     artist['followers'] = float(followers)
 
     return artist
-
-# Funciones de busqueda de datos para carga
-
-def datosExtras_CargaDeDatos_Albums(lstAlbums, lstTracks, lstArtists):
-    lstAlbums['track_name'] = lt.getElement(lstTracks, binarySearch(lstTracks, ))
-    pass
-
-def datosExtras_CargaDeDatos_Tracks(lstAlbums, lstTracks, lstArtists):
-    pass
-
-def datosExtras_CargaDeDatos_Artists(lstAlbums, lstTracks, lstArtists):
-    pass
-
 
 # Funciones de consulta
 
@@ -311,10 +298,7 @@ def listSize(list):
     return lt.size(list)
 
 
-def firstThreeLastThree(list, list_size):
-    firstThree = lt.subList(list, 1, 3)
-    lastThree = lt.subList(list, list_size-2, 3)
-    return firstThree, lastThree
+
 
 def buscarTracksTOP(lst, top):
     TOPtracks = lt.subList(lst, 1, top)
@@ -443,25 +427,7 @@ def contador_elementos(lst, element):
             contador += 1
     return contador
 
-# Funciones de ordenamiento
-def ordenamientoSelection(lst, cmpfunction):
-    return selectionsort.sort(lst, cmpfunction)
-    
 
-def ordenamientoInsetion(lst, cmpfunction):
-    return insertionsort.sort(lst, cmpfunction)
-
-
-def ordenamientoShell(lst, cmpfunction):
-    return shellsort.sort(lst, cmpfunction)
-
-
-def ordenamientoMerge(lst, cmpfunction):
-    return mergesort.sort(lst, cmpfunction)
-
-
-def ordenamientoQuick(lst, cmpfunction):
-    return quicksort.sort(lst, cmpfunction)
 
 
 
@@ -530,6 +496,95 @@ def cmpArtistsID_tracksID(artist1, artist2):
     return artist1["id"] < artist2["id"]
 
 
+
+
+    """ Desde aca empieza el codigo bueno """
+
+
+
+# Funcionalidades ADT Crudas
+
+def isEmpty(lst):
+    return lt.isEmpty(lst)
+
+def size(lst):
+    return lt.size(lst)
+
+def getElement(lst, pos):
+    return lt.getElement(lst, pos)
+
+def deleteElement(lst, pos):
+    return lt.deleteElement(lst, pos)
+
+def subList(lst, pos, numelem):
+    return lt.subList(lst, pos, numelem)
+
+def iterator(lst):
+    return lt.iterator(lst)
+
+
+
+# Funciones de ordenamiento ADT
+
+def ordenamientoSelection(lst, cmpfunction):
+    return selectionsort.sort(lst, cmpfunction)
+    
+def ordenamientoInsetion(lst, cmpfunction):
+    return insertionsort.sort(lst, cmpfunction)
+
+def ordenamientoShell(lst, cmpfunction):
+    return shellsort.sort(lst, cmpfunction)
+
+def ordenamientoMerge(lst, cmpfunction):
+    return mergesort.sort(lst, cmpfunction)
+
+def ordenamientoQuick(lst, cmpfunction):
+    return quicksort.sort(lst, cmpfunction)
+
+
+# Funciones de busqueda
+
+def binarySearch(lst, lookingForElement, cmpFunction):
+    pos_inicial = 1
+    lst_len = lt.size(lst)
+ 
+    while pos_inicial <= lst_len:
+        mid = pos_inicial + (lst_len - pos_inicial) // 2
+        if cmpFunction(lt.getElement(lst, mid), lookingForElement) == 0:
+            pos_inicial = mid + 1
+        elif cmpFunction(lt.getElement(lst, mid), lookingForElement) == 1:
+            pos_inicial = mid - 1
+        else:
+            return mid
+    return -1
+
+def buscarLimiteDeElemento(lst, element, limit, Dict_Key):
+    # limite == True -> busca el limite superior, else -> limite inferior
+    if limit == True:
+        while lt.getElement(lst, mid-1)[f"{Dict_Key}"] == element:
+            mid -= 1
+    else:
+        while lt.getElement(lst, mid)[f"{Dict_Key}"] == element:
+            mid += 1
+    return mid
+
+def busquedaLineal(lst, lookingForElement, Dict_Key):
+    for _ in range(1, lt.size(lst)):
+        if _[f"{Dict_Key}"] == lookingForElement:
+            return _
+    return -1
+
+
+
+# Funciones para sacar datos
+
+def firstThreeLastThree(list, list_size):
+    firstThree = lt.subList(list, 1, 3)
+    lastThree = lt.subList(list, list_size-2, 3)
+    return firstThree, lastThree
+
+
+
 # Funciones para medir tiempos de ejecucion
 
 def getTime():
@@ -548,9 +603,11 @@ def deltaTime(start, end):
 
 
 
+# Funciones de comparacion
 
-    """ Desde aca empieza el codigo bueno """
 
+    # Funciones de comparacion de ordenamiento (Sorts)
+    
 def cmpTracksIDs(FirstTrack, SecondTrack):
     return FirstTrack["id"] < SecondTrack["id"]
 
@@ -559,3 +616,12 @@ def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
 
 def cmpArtistsIDs(FirstArtist, SecondArtist):
     return FirstArtist["id"] < SecondArtist["id"]
+
+    # Funciones de comparacion de busqueda
+
+def cmpBinaryFunction(Album, lookingForElement):
+    if Album["id"] < lookingForElement["id"]:
+        return 0
+    elif Album["id"] > lookingForElement["id"]:
+        return 1
+    return 2
