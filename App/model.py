@@ -615,3 +615,10 @@ def idTrack_NombreTrack(lst_tracks, idTrack):
     if index == -1:
         return "No disponible"
     return lt.getElement(lst_tracks, index)["name"]
+
+
+def NombreTrack_IDTrack(lst_tracks, NombreTrack):
+    index = binarySearch(lst_tracks, NombreTrack, "id")
+    if index == -1:
+        return "No disponible"
+    return lt.getElement(lst_tracks, index)["name"]
