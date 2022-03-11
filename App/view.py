@@ -175,21 +175,26 @@ def print_requerimiento2(lista, n):
         ])
     print(x.get_string())
 
-def print_requerimiento3( FirstThree, LastThree):
+def print_requerimiento3(FirstThree, LastThree):
     x = PrettyTable()
     x.field_names = ['name', 'album', 'artists', 'popularity', 'duration_ms', 'href','lyrics']
-        
-    for i in range(1, len(lista_top)):
-        datos_tracks = lt.getElement(lista_top, i)
-        x.add_row([
-            datos_tracks['name'],
-            controller.idAlbum_NombreAlbum(control["model"]["albums"],datos_tracks['album_id']),
-            ", ".join(controller.requerimiento3_listArtistsID_listNames(control, datos_tracks['artists_id'])),
-            datos_tracks['popularity'],
-            datos_tracks['duration_ms'],
-            datos_tracks['href'][:15],
-            datos_tracks['lyrics'][:15],
-         ])
+    if LastThree:
+        x.add_row(["...", "...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "...", "...", "..."])
+        for i in range(1, 4):
+
+            datos_tracks = lt.getElement(LastThree, i)
+            x.add_row([
+                datos_tracks['name'],
+                controller.idAlbum_NombreAlbum(control["model"]["albums"],datos_tracks['album_id']),
+                ", ".join(controller.requerimiento3_listArtistsID_listNames(control, datos_tracks['artists_id'])),
+                datos_tracks['popularity'],
+                datos_tracks['duration_ms'],
+                datos_tracks['href'][:15],
+                datos_tracks['lyrics'][:15],
+
+            ])
     print(x.get_string)
     
 def print_Requerimiento4(lst):
@@ -204,7 +209,6 @@ def print_Requerimiento4(lst):
         lista_nombreArtistas,
         datos['duration_ms'],
         datos['popularity'],
-        datos['preview_url'],
         "Letra de la canción NO disponible" if datos['lyrics'] == "-99" else datos['lyrics']
             ])
     print(x.get_string())
@@ -225,14 +229,13 @@ def printCanciones_Requerimiento5(lst):
 
 def print_Requerimiento6(lst, n):
     x = PrettyTable()
-    x.field_names = ['name', 'artists', 'avaliable_markets', 'popularity', 'duration_ms']
-    
+    x.field_names = ['name', "album_name", 'artists', 'avaliable_markets', 'popularity', 'duration_ms']
 
     for dato in lt.iterator(lst):
-        lista_nombreArtistas = controller.listaArtistas_IDaNombre(control, dato['artists_id'])
         x.add_row([
             dato['name'],
-            lista_nombreArtistas,
+            controller.idAlbum_NombreAlbum(control["model"]["albums"],dato["album_id"]),
+            ", ".join(controller.requerimiento3_listArtistsID_listNames(control, dato['artists_id'])),
             dato['available_markets_size'],
             dato['popularity'],
             dato['duration_ms']
@@ -378,6 +381,7 @@ while True:
         canciones = controller.linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
 
         organizarCanciones_available_markets = controller.ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
+        print("llegue aca")
         print_Requerimiento6(organizarCanciones_available_markets, n)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
