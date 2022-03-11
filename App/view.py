@@ -294,6 +294,7 @@ while True:
     controller.clearConsole()
 
     if int(opcionMenu[0]) == 1:
+        inicio = model.getTime()
         tipo_catalogo = input("\n - - Con que tipo de representacion de lista quieres cargar el catalogo - - \n\n 1 - ARRAY_LIST \n 2 - SINGLE_LINKED \n\nSeleccion: ")
         control = newController(tipo_catalogo)
         controller.clearConsole()
@@ -322,18 +323,24 @@ while True:
         print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
         print("\n\nThe first 3 and last 3 tracks in the range are...")
         print_trackFirstThreeLastThree(trackFirstThree, trackLastThree)
+        end = model.getTime()
+        print(float(end-inicio))
+
 
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
+       
 
 
     elif int(opcionMenu[0]) == 2: # requerimiento 1
         print("========== Requerimiento 1 - Listar los albumes en un periodo de tiempo ==========\n")
         FechaInicialPeriodo = int(input("Introducir fecha inicial del periodo: "))
         FechaFinalPeriodo = int(input("Introducir fecha final del periodo: "))
-        
+        inicio = model.getTime()
         albumFirstThree, albumLastThree = controller.Requerimiento1(control, FechaInicialPeriodo, FechaFinalPeriodo)
         print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
+        end = model.getTime()
+        print(end-inicio)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
@@ -341,17 +348,25 @@ while True:
     elif int(opcionMenu[0]) == 3: # requerimiento 2
         print("========== Requerimiento 2 - Encontrar los artistas mas populares ==========\n")
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
+        inicio = model.getTime()
         top_n, albumFirstThree, albumLastThree = controller.Requerimiento2(control, n)
         print_requerimiento2(top_n, controller.size(top_n))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
+        end = model.getTime()
+
+        print(end-inicio)
+
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
     elif int(opcionMenu[0]) == 4: # requerimiento 3
         print("========== Requerimiento 3 - Encontrar las canciones mas populares ==========\n")
         top = int(input("Ingrese el numero de las canciones más famosa, que desea conocer:"))
+        inicio = model.getTime()
         canciones, trackFirstThree, trackLastThree = controller.Requerimiento3(control, top)
         print_requerimiento3(trackFirstThree,trackLastThree)
+        end = model.getTime()
+        print(end-inicio)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
@@ -359,31 +374,40 @@ while True:
         print("========== Requerimiento 4 - Encontrar la cancion mas popular de un artista ==========\n")
         artista = input("Inserte el nombre del artista: ")
         mercado = input("Nombre de país/mercado disponible de la canción: ")
+        inicio = model.getTime()
         cantidadCancionesArtista, canciones_organizadas, cantidadAlbunesArtista = controller.Requerimiento4(control, artista, mercado)
         print(f"El número total de canciones del artista {artista} es: {cantidadCancionesArtista}")
         print(f"El número de álbumes asociados a el artista {artista} es: {cantidadAlbunesArtista}")
         print(canciones_organizadas)
         print_Requerimiento4(canciones_organizadas)
+        end = model.getTime()
+        print(end-inicio)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
     elif int(opcionMenu[0]) == 6: # requerimiento 5
         print("========== Requerimiento 5 - Encontrar la discografia de un artista ==========\n")
         nombreArtista = input("Nombre del artista: ")
+        inicio = model.getTime()
         single, compilation, album, albumFirstThree, albumLastThree = controller.Requerimiento5(control, nombreArtista)
         print(f'Number of "single": {single}')
         print(f'Number of "compilation": {compilation}')
         print(f'Number of "album": {album}')
         # Requisito print primeros 3 y ultimos 3
-        printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)    
+        printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)   
+        end = model.getTime()
+        print(end-inicio) 
 
     elif int(opcionMenu[0]) == 7:
         anio_inicial = int(input("Año inicial del periodo: "))
         anio_final = int(input("Año final del periodo: "))
         n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
+        inicio = model.getTime()
         organizarCanciones_available_markets = controller.Requerimiento6(control, anio_inicial, anio_final)
         
         print_Requerimiento6(organizarCanciones_available_markets, n)
+        end = model.getTime()
+        print(end-inicio)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 

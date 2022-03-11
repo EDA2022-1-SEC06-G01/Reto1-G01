@@ -332,3 +332,4 @@ def Requerimiento6(control, anio_inicial,anio_final):
   canciones = linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
   organizarCanciones_available_markets = ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
   return organizarCanciones_available_markets
+  
