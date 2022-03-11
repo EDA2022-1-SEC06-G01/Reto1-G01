@@ -232,6 +232,46 @@ def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
 def cmpArtistsIDs(FirstArtist, SecondArtist):
     return model.cmpArtistsIDs(FirstArtist, SecondArtist)
 
+# Funciones para consola
+def clearConsole():
+    return model.clearConsole()
+
+
+# Funciones requerimientos
+
+  # Funciones requerimiento 5
+def contarTiposDeAlbumes(lst):
+  single = 0
+  compilation = 0
+  album = 0
+  for _ in model.iterator(lst):
+    if _["album_type"] == "single":
+      single += 1
+    elif _["album_type"] == "compilation":
+      compilation += 1
+    elif _["album_type"] == "album":
+      album += 1
+  return single, compilation, album
+
+
+# Funciones busqueda ids
+def idArtista_NombreArtista(lst_artists, idArtista):
+  for _ in lt.iterator(lst_artists):
+    if _["id"] == idArtista:
+      return _["name"]
+  return -1
+
+# Funciones busqueda de id a nombre
+def idArtista_NombreArtista(lst_artists, idArtista):
+  return model.idArtista_NombreArtista(lst_artists, idArtista)
+
+def idAlbum_NombreAlbum(lst_albums, idAlbum):
+  return model.idAlbum_NombreAlbum(lst_albums, idAlbum)
+
+def idTrack_NombreTrack(lst_tracks, idTrack):
+  return model.idTrack_NombreTrack(lst_tracks, idTrack)
+
+
 #Requerimientos
 
 def Requerimiento1(control, inicial, final):
@@ -260,6 +300,17 @@ def Requerimiento4(control, artista, mercado):
   canciones_organizadas = ordenamientoShell(cancionesDeArtista, model.cmpTrackPopularity_duration_name)
   cantidadAlbunesArtista = contador_elementos(control["model"]["albums"], idArtista)
   return cantidadCancionesArtista, canciones_organizadas, cantidadAlbunesArtista
+
+def Requerimiento5(control, nombreArtista):
+
+  idArtista = buscarIDArtista(control, nombreArtista)
+  listaAlbunesOrganizado_Nombres = ordenamientoShell(control["model"]["albums"], model.cmpArtistID_Albums)
+  indexAlbumArtistas_Inicial = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", True)
+  indexAlbumArtistas_Final = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", False)
+  subLista_albums = lt.subList(listaAlbunesOrganizado_Nombres, indexAlbumArtistas_Inicial, (indexAlbumArtistas_Final - indexAlbumArtistas_Inicial)+1)
+  single, compilation, album = contarTiposDeAlbumes(subLista_albums)
+  albumFirstThree, albumLastThree = FirstThreeLastThree(subLista_albums, size(subLista_albums))
+  return single, compilation, album, albumFirstThree, albumLastThree
 
 def Requerimiento6(control, anio_inicial,anio_final):
   organizedAlbumsByYear = ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
