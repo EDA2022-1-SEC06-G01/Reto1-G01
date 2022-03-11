@@ -175,7 +175,7 @@ def print_requerimiento2(lista, n):
         ])
     print(x.get_string())
 
-def print_requerimiento3(lista_top, top):
+def print_requerimiento3( FirstThree, LastThree):
     x = PrettyTable()
     x.field_names = ['name', 'album', 'artists', 'popularity', 'duration_ms', 'href','lyrics']
         
@@ -238,7 +238,6 @@ def print_Requerimiento6(lst, n):
             dato['duration_ms']
                 ])
     print(x.get_string())
-
 
 def printFirstThreeLastThree_requerimiento5(FirstThree, LastThree):
     x = PrettyTable()
@@ -338,8 +337,8 @@ while True:
     elif int(opcionMenu[0]) == 4: # requerimiento 3
         print("========== Requerimiento 3 - Encontrar las canciones mas populares ==========\n")
         top = int(input("Ingrese el numero de las canciones más famosa, que desea conocer:"))
-        canciones = controller.Requerimiento3(control, top)
-        print_requerimiento3(canciones,top)
+        canciones, trackFirstThree, trackLastThree = controller.Requerimiento3(control, top)
+        print_requerimiento3(trackFirstThree,trackLastThree)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
