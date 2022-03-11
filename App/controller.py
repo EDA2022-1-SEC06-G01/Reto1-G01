@@ -302,7 +302,8 @@ def Requerimiento2(control, n):
 def Requerimiento3(control, top):
   ordenado = model.ordenamientoMerge(control["model"]["tracks"], model.cmpTracksPopularity)
   TopTracks = model.buscarTracksTOP(ordenado, top)
-  return TopTracks
+  trackFirstThree, trackLastThree = FirstThreeLastThree(TopTracks, top)
+  return TopTracks, trackFirstThree, trackLastThree
 
 def Requerimiento4(control, artista, mercado):
   idArtista = buscarIDArtista(control, artista)
