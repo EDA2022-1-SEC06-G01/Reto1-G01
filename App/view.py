@@ -51,13 +51,11 @@ def printMenu():
     print("========== ¡Bienvenido! ==========\n")
     print("1- Cargar información en el catálogo")
     print("2- Listar los albumes en un periodo de tiempo")
-    print("3- Encontrar los artistas mas pouplares")
+    print("3- Encontrar los artistas mas populares")
     print("4- Encontrar las canciones mas populares")
     print("5- Encontrar la canción mas popular de un artista")
-    print("6- Organizar con un tipo de ordenamiento iterativo")
-    print("7- Encontrar la discografía de un artista")
-    print("8- Clasificar las canciones con mayor distribución")
-    print("8- Organizar con un tipo de ordenamiento iterativo")
+    print("6- Encontrar la discografia de un artista")
+    print("7- Clasificar las canciones con mayor distribucion")
     print("0- Salir")
 
 
@@ -182,9 +180,8 @@ def print_requerimiento3(lista_top, top):
         datos_tracks = lt.getElement(lista_top, i)
         x.add_row([
             datos_tracks['name'],
-            datos_tracks['album_id'],
-            #controller.listaArtistasID(control, datos_tracks['artists_id']),
-            datos_tracks['artists_id'],
+            controller.idAlbum_NombreAlbum(control["model"]["albums"],datos_tracks['album_id']),
+            ", ".join(controller.requerimiento3_listArtistsID_listNames(control, datos_tracks['artists_id'])),
             datos_tracks['popularity'],
             datos_tracks['duration_ms'],
             datos_tracks['href'][:15],
@@ -318,11 +315,14 @@ while True:
         controller.clearConsole()
 
 
-    elif int(opcionMenu[0]) == 2:
-        inicial, final = input("fechas con espacio: ").split()
+    elif int(opcionMenu[0]) == 2: # requerimiento 1
+        print("========== Requerimiento 1 - Listar los albumes en un periodo de tiempo ==========\n")
+        FechaInicialPeriodo = int(input("Introducir fecha inicial del periodo: "))
+        FechaFinalPeriodo = int(input("Introducir fecha final del periodo: "))
+        
         organized = controller.ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
-        index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
-        index_anio_final = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
+        index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), FechaInicialPeriodo, True)
+        index_anio_final = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), FechaFinalPeriodo, False)
         sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(sublista, controller.size(sublista))
         print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
@@ -330,7 +330,8 @@ while True:
         controller.clearConsole()
 
 
-    elif int(opcionMenu[0]) == 3:
+    elif int(opcionMenu[0]) == 3: # requerimiento 2
+        print("========== Requerimiento 2 - Encontrar los artistas mas populares ==========\n")
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
         organized = controller.ordenamientoShell(control["model"]["artists"], model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
@@ -340,7 +341,8 @@ while True:
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
-    elif int(opcionMenu[0]) == 4:
+    elif int(opcionMenu[0]) == 4: # requerimiento 3
+        print("========== Requerimiento 3 - Encontrar las canciones mas populares ==========\n")
         top = int(input("Ingrese el numero de las canciones más famosa, que desea conocer:"))
         canciones = controller.BuscarTracksTOP(control, top)
         #print(canciones)
@@ -348,7 +350,8 @@ while True:
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
-    elif int(opcionMenu[0]) == 5:
+    elif int(opcionMenu[0]) == 5: # requerimiento 4
+        print("========== Requerimiento 4 - Encontrar la cancion mas popular de un artista ==========\n")
         artista = input("Inserte el nombre del artista: ")
         mercado = input("Nombre de país/mercado disponible de la canción: ")
         idArtista = controller.buscarIDArtista(control, artista)
@@ -357,11 +360,13 @@ while True:
         cantidadAlbunesArtista = controller.contador_elementos(control["model"]["albums"], idArtista)
         print(f"El número total de canciones del artista {artista} es: {cantidadCancionesArtista}")
         print(f"El número de álbumes asociados a el artista {artista} es: {cantidadAlbunesArtista}")
+        print(canciones_organizadas)
         print_Requerimiento4(canciones_organizadas)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
-    elif int(opcionMenu[0]) == 6:
+    elif int(opcionMenu[0]) == 6: # requerimiento 5
+        print("========== Requerimiento 5 - Encontrar la discografia de un artista ==========\n")
         nombreArtista = input("Nombre del artista: ")
         idArtista = controller.buscarIDArtista(control, nombreArtista)
 
@@ -386,15 +391,8 @@ while True:
         
 
 
-        
-
-        
-
-
-        
-        
-
-    elif int(opcionMenu[0]) == 7:
+    elif int(opcionMenu[0]) == 7: # requerimiento 6
+        print("========== Requerimiento 6 - Clasificar las canciones con mayor distribucion ==========\n")
         anio_inicial = int(input("Año inicial del periodo: "))
         anio_final = int(input("Año final del periodo: "))
         n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
@@ -409,39 +407,7 @@ while True:
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
 
-    elif int(opcionMenu[0]) == 8:
-        tipo = input("Escoje un tipo de ordenamiento (selection, insertion, shell, merge o quick): ")
-        criterio = "artists"
-        funcion = controller.cmpArtistsByFollowers
-        if tipo.lower() == "selection":
-            tiempo, organizado = controller.ordenamientoSelection(control["model"][criterio], funcion)
-            print(f"El tiempo que tomo el ordenamiento Selection en organizar los datos fue {tiempo}")
 
-        elif tipo.lower() == "insertion":
-            tiempo, organizado = controller.ordenamientoInsetion(control["model"][criterio], funcion)
-            print(f"El tiempo que tomo el ordenamiento Insertion en organizar los datos fue {tiempo}")
-
-        elif tipo.lower() == "shell":
-            tiempo, organizado = controller.ordenamientoShell(control["model"][criterio], funcion)
-            print(f"El tiempo que tomo el ordenamiento Shell en organizar los datos fue {tiempo}")
-
-        elif tipo.lower() == "merge":
-             tiempo, organizado = controller.ordenamientoMerge(control["model"][criterio], funcion)
-             print(f"El tiempo que tomo el ordenamiento Merge en organizar los datos fue {tiempo}")
-
-        elif tipo.lower() == "quick":
-             tiempo, organizado = controller.ordenamientoQuick(control["model"][criterio], funcion)
-             print(f"El tiempo que tomo el ordenamiento Quick en organizar los datos fue {tiempo}")
-
-        else: 
-            print("Intente un nombre válido")
-        input("\n>Hundir cualquier tecla para continuar...")
-        controller.clearConsole()
-
-    elif int(opcionMenu[0]) == 8:
-        pass
-    elif int(opcionMenu[0]) == 9:
-        pass
     else:
         sys.exit(0)
 sys.exit(0)

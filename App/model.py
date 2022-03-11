@@ -488,7 +488,12 @@ def cmpAlbumsIDs(album1, album2):
     return album1["id"] < album2["id"]
 
 def cmpTracksPopularity(track1, track2):
-    return track1["popularity"] >  track2["popularity"]
+    if track1["popularity"] != track2["popularity"]:
+            return track1["popularity"] > track2["popularity"]
+    elif track1["duration_ms"] != track2["duration_ms"]:
+        return track1["duration_ms"] > track2["duration_ms"]
+    else:
+        return track1["name"] > track2["name"]
 
 def cmpArtistsByName(artist1, artist2):
     return artist1["name"] < artist2["name"]
@@ -616,22 +621,22 @@ def clearConsole():
 
 # Funciones busqueda de id a nombre
 def idArtista_NombreArtista(lst_artists, idArtista):
-    index = binarySearch(lst_artists, idArtista, "id")
-    if index == -1:
-        return "No disponible"
-    return lt.getElement(lst_artists, index)["name"]
+    for _ in lt.iterator(lst_artists):
+        if _["id"] == idArtista:
+            return _["name"]
+    return -1
 
 def idAlbum_NombreAlbum(lst_albums, idAlbum):
-    index = binarySearch(lst_albums, idAlbum, "id")
-    if index == -1:
-        return "No disponible"
-    return lt.getElement(lst_albums, index)["name"]
+    for _ in lt.iterator(lst_albums):
+        if _["id"] == idAlbum:
+            return _["name"]
+    return -1
 
 def idTrack_NombreTrack(lst_tracks, idTrack):
-    index = binarySearch(lst_tracks, idTrack, "id")
-    if index == -1:
-        return "No disponible"
-    return lt.getElement(lst_tracks, index)["name"]
+    for _ in lt.iterator(lst_tracks):
+        if _["id"] == idTrack:
+            return _["name"]
+    return -1
 
 
 def NombreTrack_IDTrack(lst_tracks, NombreTrack):

@@ -279,3 +279,14 @@ def idAlbum_NombreAlbum(lst_albums, idAlbum):
 
 def idTrack_NombreTrack(lst_tracks, idTrack):
   return model.idTrack_NombreTrack(lst_tracks, idTrack)
+
+def requerimiento3_listArtistsID_listNames(control, listArtistsID):
+  nombres = []
+  if len(listArtistsID) == 0:
+    return "No hay artistas"
+  else:
+    for _ in listArtistsID:
+      nombres.append(idAlbum_NombreAlbum(control["model"]["artists"], _))
+    return nombres
+
+
