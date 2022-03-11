@@ -385,6 +385,33 @@ def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
     # If we reach here, then the element was not present
     return -1 #
 
+def binarySearchLimites_years(lst, elemento, elementoDiccionario, primeroUltimo):
+    low = 1
+    high = lt.size(lst)
+    mid = 0
+    while low <= high:
+ 
+        mid = (high + low) // 2
+        # If x is greater, ignore left half
+        if lt.getElement(lst, mid)[f"{elementoDiccionario}"].year < elemento:
+            low = mid + 1 
+        # If x is smaller, ignore right half
+        elif lt.getElement(lst, mid)[f"{elementoDiccionario}"].year > elemento:
+            high = mid - 1
+        # means x is present at mid
+        else:
+            if primeroUltimo == True:
+                while lt.getElement(lst, mid-1)[f"{elementoDiccionario}"].year == elemento:
+                    mid -= 1
+                return mid
+            else:
+                while lt.getElement(lst, mid)[f"{elementoDiccionario}"].year == elemento:
+                    mid += 1
+                return mid -1
+ 
+    # If we reach here, then the element was not present
+    return -1 #
+
 def getAlbumID(lst) -> list:
     AlbumIDList = []
     for i in lt.iterator(lst):
@@ -489,7 +516,6 @@ def cmpArtistsByName(artist1, artist2):
 
 
 
-    """ Desde aca empieza el codigo bueno """
 
 
 

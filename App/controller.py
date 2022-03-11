@@ -96,6 +96,12 @@ def linearSearch_Requerimiento6(lst, AlbumIDList):
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
   return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo) #
 
+def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
+  return model.binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo)
+
+def binarySearchLimites_years(lst, elemento, elementoDiccionario, primeroUltimo):
+  return model.binarySearchLimites_years(lst, elemento, elementoDiccionario, primeroUltimo)
+
 
 def listaArtistasID(lst, datos):
   
@@ -130,7 +136,7 @@ def cmpTracksPopularity(track1, track2):
 
 
 def buscarCancionPorID(control, elementoBuscado):
-  lista_ordenada = model.ordenamientoShell(control["model"]["albums"], "tracks", model.cmpIDTracks)
+  lista_ordenada = model.ordenamientoShell(control["model"]["albums"], model.cmpIDTracks)
   index = model.binarySearch(lista_ordenada, elementoBuscado, "id")
   if index == -1:
     return "Not found"
@@ -166,7 +172,6 @@ def buscarIDArtista(control, elementoBuscado):
 
 
 
-    """ Desde aca empieza el codigo bueno """
 
 
 
