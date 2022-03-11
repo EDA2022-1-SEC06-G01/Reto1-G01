@@ -291,7 +291,7 @@ def requerimiento3_listArtistsID_listNames(control, listArtistsID):
 #Requerimientos
 
 def Requerimiento1(control, inicial, final):
-  organized = ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
+  organized = ordenamientoMerge(control['model']['albums'], model.cmpYearsMenorMayor)
   index_anio_inicial = interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
   index_anio_final = interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
   sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
@@ -299,7 +299,7 @@ def Requerimiento1(control, inicial, final):
   return albumFirstThree, albumLastThree
 
 def Requerimiento2(control, n):
-  organized = ordenamientoShell(control["model"]["artists"], model.cmpArtistsPopularity)
+  organized = ordenamientoMerge(control["model"]["artists"], model.cmpArtistsPopularity)
   top_n = lt.subList(organized, 1, n)
   albumFirstThree, albumLastThree = FirstThreeLastThree(top_n, size(top_n))
   return top_n, albumFirstThree, albumLastThree
@@ -314,14 +314,14 @@ def Requerimiento3(control, top):
 def Requerimiento4(control, artista, mercado):
   idArtista = buscarIDArtista(control, artista)
   cantidadCancionesArtista, cancionesDeArtista = linearSearch_Requerimiento4(control["model"]["tracks"], idArtista, mercado)
-  canciones_organizadas = ordenamientoShell(cancionesDeArtista, model.cmpTrackPopularity_duration_name)
+  canciones_organizadas = ordenamientoMerge(cancionesDeArtista, model.cmpTrackPopularity_duration_name)
   cantidadAlbunesArtista = contador_elementos(control["model"]["albums"], idArtista)
   return cantidadCancionesArtista, canciones_organizadas, cantidadAlbunesArtista
 
 def Requerimiento5(control, nombreArtista):
 
   idArtista = buscarIDArtista(control, nombreArtista)
-  listaAlbunesOrganizado_Nombres = ordenamientoShell(control["model"]["albums"], model.cmpArtistID_Albums)
+  listaAlbunesOrganizado_Nombres = ordenamientoMerge(control["model"]["albums"], model.cmpArtistID_Albums)
   indexAlbumArtistas_Inicial = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", True)
   indexAlbumArtistas_Final = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", False)
   subLista_albums = lt.subList(listaAlbunesOrganizado_Nombres, indexAlbumArtistas_Inicial, (indexAlbumArtistas_Final - indexAlbumArtistas_Inicial)+1)
@@ -330,11 +330,11 @@ def Requerimiento5(control, nombreArtista):
   return single, compilation, album, albumFirstThree, albumLastThree
 
 def Requerimiento6(control, anio_inicial,anio_final):
-  organizedAlbumsByYear = ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
+  organizedAlbumsByYear = ordenamientoMerge(control['model']['albums'], model.cmpYearsMenorMayor)
   anio_inicial_index = interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, size(organizedAlbumsByYear), anio_inicial, True)
   anio_final_index = interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, size(organizedAlbumsByYear), anio_final, False)
   sublista = lt.subList(organizedAlbumsByYear, anio_inicial_index, anio_final_index-anio_inicial_index)
   getAlbumIDList = getAlbumID(sublista)
   canciones = linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
-  organizarCanciones_available_markets = ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
+  organizarCanciones_available_markets = ordenamientoMerge(canciones, model.cmpAvailableMarkets_popularity_name)
   return organizarCanciones_available_markets
