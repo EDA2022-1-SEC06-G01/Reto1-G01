@@ -303,7 +303,7 @@ def listSize(list):
 
 def buscarTracksTOP(lst, top):
     TOPtracks = lt.subList(lst, 1, top)
-    return TOPtracks
+    return TOPtracks #
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
     elementToFind = int(elementToFind)
@@ -334,7 +334,7 @@ def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, prime
         if lt.getElement(lst, pos)["release_date"].year > elementToFind:
             return interpolationSearch_Requerimiento1(lst, pos1, pos - 1, elementToFind, primeroUltimo)
     
-    return -1
+    return -1 #
 
 def binarySearch(lst, elemento, elementoDiccionario):
     low = 1
@@ -342,20 +342,17 @@ def binarySearch(lst, elemento, elementoDiccionario):
     mid = 0
  
     while low <= high:
- 
         mid = (high + low) // 2
  
         # If x is greater, ignore left half
         if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < elemento:
             low = mid + 1
- 
         # If x is smaller, ignore right half
         elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > elemento:
             high = mid - 1
- 
         # means x is present at mid
         else:
-            return mid
+            return mid #
  
     # If we reach here, then the element was not present
     return -1
@@ -365,20 +362,15 @@ def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
     low = 1
     high = lt.size(lst)
     mid = 0
- 
     while low <= high:
  
         mid = (high + low) // 2
- 
         # If x is greater, ignore left half
         if lt.getElement(lst, mid)[f"{elementoDiccionario}"] < elemento:
-            low = mid + 1
-            
- 
+            low = mid + 1 
         # If x is smaller, ignore right half
         elif lt.getElement(lst, mid)[f"{elementoDiccionario}"] > elemento:
             high = mid - 1
- 
         # means x is present at mid
         else:
             if primeroUltimo == True:
@@ -391,7 +383,7 @@ def binarySearchLimites(lst, elemento, elementoDiccionario, primeroUltimo):
                 return mid -1
  
     # If we reach here, then the element was not present
-    return -1
+    return -1 #
 
 def getAlbumID(lst) -> list:
     AlbumIDList = []
@@ -419,7 +411,7 @@ def linearSearch_Requerimiento6(lst, AlbumIDList):
         if (i["album_id"] in AlbumIDList):
             lt.addLast(subLista, i)
             
-    return subLista
+    return subLista #
 
 def contador_elementos(lst, element):
     contador = 0 
@@ -440,7 +432,7 @@ def cmpArtistsByFollowers(artist1, artist2):
     return artist1["followers"] < artist2["followers"]
 
 def cmpYearsMenorMayor(date1, date2):
-    return (date1["release_date"].year < date2["release_date"].year)
+    return (date1["release_date"].year < date2["release_date"].year)#
 
 def cmpYearsMayorMenor(date1, date2):
     return (date1["release_date"].year > date2["release_date"].year)
@@ -451,7 +443,7 @@ def cmpArtistsPopularity(artist1, artists2):
     elif artist1["followers"] != artists2["followers"]:
         return artist1["followers"] > artists2["followers"]
     else:
-        return artist1["name"] > artists2["name"]
+        return artist1["name"] > artists2["name"]#
 
 def cmpIDTracks(artist1, artist2):
     return artist1["id"] < artist2["id"]
@@ -460,13 +452,11 @@ def cmpArtistsID(artist1, artist2):
     return artist1["artists_id"] < artist2["artists_id"]
 
 def cmpArtistsID_tracksID(artist1, artist2):
-    return artist1["id"] < artist2["id"]
+    return artist1["id"] < artist2["id"] #
 
 def cmpArtistID_Albums(album1, album2):
     return album1["artist_id"] < album2["artist_id"]
 
-def cmpArtistsByName(artist1, artist2):
-    return artist1["name"] < artist2["name"]
 
 def cmpTrackPopularity_duration_name(track1, track2):
     if track1["popularity"] != track2["popularity"]:
@@ -474,7 +464,7 @@ def cmpTrackPopularity_duration_name(track1, track2):
     elif track1["duration_ms"] != track2["duration_ms"]:
         return track1["duration_ms"] > track2["duration_ms"]
     else:
-        return track1["name"] > track2["name"]
+        return track1["name"] > track2["name"]#
     
 def cmpAvailableMarkets_popularity_name(track1, track2):
     if track1["available_markets_size"] != track2["available_markets_size"]:
@@ -482,10 +472,7 @@ def cmpAvailableMarkets_popularity_name(track1, track2):
     elif track1["popularity"] != track2["popularity"]:
         return track1["popularity"] > track2["popularity"]
     else:
-        return track1["name"] > track2["name"]
-
-def cmpAlbumsIDs(album1, album2):
-    return album1["id"] < album2["id"]
+        return track1["name"] > track2["name"]#
 
 def cmpTracksPopularity(track1, track2):
     if track1["popularity"] != track2["popularity"]:
@@ -496,10 +483,8 @@ def cmpTracksPopularity(track1, track2):
         return track1["name"] > track2["name"]
 
 def cmpArtistsByName(artist1, artist2):
-    return artist1["name"] < artist2["name"]
+    return artist1["name"] < artist2["name"] #
 
-def cmpArtistsID_tracksID(artist1, artist2):
-    return artist1["id"] < artist2["id"]
 
 
 
@@ -550,8 +535,6 @@ def ordenamientoQuick(lst, cmpfunction):
 
 # Funciones de busqueda
 
-
-
 def buscarLimiteDeElemento(lst, element, limit, Dict_Key):
     # limite == True -> busca el limite superior, else -> limite inferior
     if limit == True:
@@ -600,13 +583,13 @@ def deltaTime(start, end):
 # Funciones de comparacion
 
 
-    # Funciones de comparacion de ordenamiento (Sorts)
+# Funciones de comparacion de ordenamiento (Sorts)
     
 def cmpTracksIDs(FirstTrack, SecondTrack):
     return FirstTrack["id"] < SecondTrack["id"]
 
 def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
-    return FirstAlbum["id"] < SecondAlbum["id"]
+    return FirstAlbum["id"] < SecondAlbum["id"] #
 
 def cmpArtistsIDs(FirstArtist, SecondArtist):
     return FirstArtist["id"] < SecondArtist["id"]
