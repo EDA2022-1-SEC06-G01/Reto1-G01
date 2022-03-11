@@ -221,10 +221,6 @@ def ordenamientoQuick(control, funcion):
   return model.ordenamientoQuick(control, funcion)
 
 
-# Funciones de busqueda
-
-def binarySearch(lst, lookingForElement, cmpFunction):
-  return binarySearch(lst, lookingForElement, cmpFunction)
 
 # Funciones para sacar datos
 
@@ -243,3 +239,43 @@ def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
 
 def cmpArtistsIDs(FirstArtist, SecondArtist):
     return model.cmpArtistsIDs(FirstArtist, SecondArtist)
+
+
+# Funciones para consola
+def clearConsole():
+    return model.clearConsole()
+
+
+# Funciones requerimientos
+
+  # Funciones requerimiento 5
+def contarTiposDeAlbumes(lst):
+  single = 0
+  compilation = 0
+  album = 0
+  for _ in model.iterator(lst):
+    if _["album_type"] == "single":
+      single += 1
+    elif _["album_type"] == "compilation":
+      compilation += 1
+    elif _["album_type"] == "album":
+      album += 1
+  return single, compilation, album
+
+
+# Funciones busqueda ids
+def idArtista_NombreArtista(lst_artists, idArtista):
+  for _ in lt.iterator(lst_artists):
+    if _["id"] == idArtista:
+      return _["name"]
+  return -1
+
+# Funciones busqueda de id a nombre
+def idArtista_NombreArtista(lst_artists, idArtista):
+  return model.idArtista_NombreArtista(lst_artists, idArtista)
+
+def idAlbum_NombreAlbum(lst_albums, idAlbum):
+  return model.idAlbum_NombreAlbum(lst_albums, idAlbum)
+
+def idTrack_NombreTrack(lst_tracks, idTrack):
+  return model.idTrack_NombreTrack(lst_tracks, idTrack)

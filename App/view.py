@@ -47,7 +47,8 @@ def newController(tipo_catalogo):
 
 
 def printMenu():
-    print("Bienvenido")
+    controller.clearConsole()
+    print("========== ¡Bienvenido! ==========\n")
     print("1- Cargar información en el catálogo")
     print("2- Listar los albumes en un periodo de tiempo")
     print("3- Encontrar los artistas mas pouplares")
@@ -56,6 +57,7 @@ def printMenu():
     print("6- Organizar con un tipo de ordenamiento iterativo")
     print("7- Encontrar la discografía de un artista")
     print("8- Clasificar las canciones con mayor distribución")
+    print("8- Organizar con un tipo de ordenamiento iterativo")
     print("0- Salir")
 
 
@@ -97,15 +99,17 @@ def print_artistFirstThreeLastThree(lista_primerosArtistas, lista_ultimosArtista
 def print_requerimiento2(lista, n):
     x = PrettyTable()
     x.field_names = ['artist_popularity', 'followers', 'name', 'relevant_track_name', 'genres']
-    for _ in range(1, n):
+    lista_ordenada = controller.ordenamientoShell(control["model"]["tracks"], model.cmpTracksIDs)
+    for _ in range(1, n+1):
         datos = lt.getElement(lista, _)
         x.add_row([
             datos['artist_popularity'],
             datos['followers'],
             datos['name'],
-            controller.buscarCancionPorID(control, datos['track_id']),
+            controller.idTrack_NombreTrack(lista_ordenada, datos['track_id']),
             datos['genres']        
         ])
+        print(datos['track_id'])
     print(x.get_string())
 
 
@@ -277,12 +281,15 @@ Menu principal
 """
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        tipo_catalogo = input("Con que tipo de representacion de lista quieres cargar el catalogo (ARRAY_LIST / SINGLE_LINKED): ")
-        control = newController(tipo_catalogo)
+    opcionMenu = input('\nSeleccione una opción para continuar: ')
+    controller.clearConsole()
 
-        tamanio_archivo_input = input("Con que tipo tamaño quieres cargar el archivo (5, 10, 20, 30, 50, 80, small, large): ")
+    if int(opcionMenu[0]) == 1:
+        tipo_catalogo = input("\n - - Con que tipo de representacion de lista quieres cargar el catalogo - - \n\n 1 - ARRAY_LIST \n 2 - SINGLE_LINKED \n\nSeleccion: ")
+        control = newController(tipo_catalogo)
+        controller.clearConsole()
+        tamanio_archivo_input = input("\n - - Con que tipo tamaño quieres cargar el archivo - -\n- 5 \n- 10 \n- 20 \n- 30 \n- 50 \n- 80 \n- small \n- large\n\nSeleccion: ")
+        print("\n\nCargando información de los archivos.....")
         if tamanio_archivo_input.isnumeric() == True:
             tamanio_archivo_input = tamanio_archivo_input+"pct"
         else:
@@ -293,8 +300,7 @@ while True:
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(control["model"]["albums"], album_size)
         trackFirstThree, trackLastThree = controller.FirstThreeLastThree(control["model"]["tracks"], track_size)
 
-        print("\nCargando información de los archivos ....\n")
-        
+        controller.clearConsole()
         print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         print('artist id count: ' + str(artist_size))
         print('albums id count: ' + str(album_size))
@@ -308,8 +314,11 @@ while True:
         print("\n\nThe first 3 and last 3 tracks in the range are...")
         print_trackFirstThreeLastThree(trackFirstThree, trackLastThree)
 
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
-    elif int(inputs[0]) == 2:
+
+    elif int(opcionMenu[0]) == 2:
         inicial, final = input("fechas con espacio: ").split()
         organized = controller.ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
         index_anio_inicial = controller.interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
@@ -317,23 +326,29 @@ while True:
         sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(sublista, controller.size(sublista))
         print_albumFirstThreeLastThree(albumFirstThree, albumLastThree)
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
 
-    elif int(inputs[0]) == 3:
+    elif int(opcionMenu[0]) == 3:
         n = int(input("Ingrese la cantidad de artistas que quiere en su top: "))
         organized = controller.ordenamientoShell(control["model"]["artists"], model.cmpArtistsPopularity)
         top_n = lt.subList(organized, 1, n)
         print_requerimiento2(top_n, controller.size(top_n))
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(top_n, controller.size(top_n))
         print_artistFirstThreeLastThree(albumFirstThree, albumLastThree)
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
-    elif int(inputs[0]) == 4:
+    elif int(opcionMenu[0]) == 4:
         top = int(input("Ingrese el numero de las canciones más famosa, que desea conocer:"))
         canciones = controller.BuscarTracksTOP(control, top)
         #print(canciones)
         print_requerimiento3(canciones,top)
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
-    elif int(inputs[0]) == 5:
+    elif int(opcionMenu[0]) == 5:
         artista = input("Inserte el nombre del artista: ")
         mercado = input("Nombre de país/mercado disponible de la canción: ")
         idArtista = controller.buscarIDArtista(control, artista)
@@ -343,22 +358,34 @@ while True:
         print(f"El número total de canciones del artista {artista} es: {cantidadCancionesArtista}")
         print(f"El número de álbumes asociados a el artista {artista} es: {cantidadAlbunesArtista}")
         print_Requerimiento4(canciones_organizadas)
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
-    elif int(inputs[0]) == 6:
+    elif int(opcionMenu[0]) == 6:
         nombreArtista = input("Nombre del artista: ")
         idArtista = controller.buscarIDArtista(control, nombreArtista)
-        print(idArtista)
+
         listaAlbunesOrganizado_Nombres = controller.ordenamientoShell(control["model"]["albums"], model.cmpArtistID_Albums)
         indexAlbumArtistas_Inicial = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", True)
         indexAlbumArtistas_Final = model.binarySearchLimites(listaAlbunesOrganizado_Nombres, idArtista, "artist_id", False)
-        subLista_albums = lt.subList(listaAlbunesOrganizado_Nombres, indexAlbumArtistas_Inicial, (indexAlbumArtistas_Final, indexAlbumArtistas_Inicial)+1)
-        controller.agregarNombreArtista_TrackName(subLista_albums, control["model"]["artists"])
+        subLista_albums = lt.subList(listaAlbunesOrganizado_Nombres, indexAlbumArtistas_Inicial, (indexAlbumArtistas_Final - indexAlbumArtistas_Inicial)+1)
+        single, compilation, album = controller.contarTiposDeAlbumes(subLista_albums)
 
-
+        print(f'Number of "single": {single}')
+        print(f'Number of "compilation": {compilation}')
+        print(f'Number of "album": {album}')
         # Requisito print primeros 3 y ultimos 3
         albumFirstThree, albumLastThree = controller.FirstThreeLastThree(subLista_albums, controller.size(subLista_albums))
         printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)
 
+
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
+
+
+        
+
+
         
 
         
@@ -367,7 +394,7 @@ while True:
         
         
 
-    elif int(inputs[0]) == 7:
+    elif int(opcionMenu[0]) == 7:
         anio_inicial = int(input("Año inicial del periodo: "))
         anio_final = int(input("Año final del periodo: "))
         n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
@@ -379,8 +406,10 @@ while True:
         canciones = controller.linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
         organizarCanciones_available_markets = controller.ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
         print_Requerimiento6(organizarCanciones_available_markets, n)
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
-    elif int(inputs[0]) == 8:
+    elif int(opcionMenu[0]) == 8:
         tipo = input("Escoje un tipo de ordenamiento (selection, insertion, shell, merge o quick): ")
         criterio = "artists"
         funcion = controller.cmpArtistsByFollowers
@@ -406,10 +435,12 @@ while True:
 
         else: 
             print("Intente un nombre válido")
+        input("\n>Hundir cualquier tecla para continuar...")
+        controller.clearConsole()
 
-    elif int(inputs[0]) == 8:
+    elif int(opcionMenu[0]) == 8:
         pass
-    elif int(inputs[0]) == 9:
+    elif int(opcionMenu[0]) == 9:
         pass
     else:
         sys.exit(0)

@@ -38,6 +38,7 @@ import time
 assert cf
 import csv
 import sys
+import os
 
 csv.field_size_limit(2147483647)
 default_limit = 1000
@@ -68,9 +69,9 @@ def newCatalog(tipo_catalogo):
     elif tipo_catalogo.lower() == 'single_linked':
         tipo = 'SINGLE_LINKED'
 
-    catalog['tracks'] = lt.newList(tipo)
-    catalog['albums'] = lt.newList(tipo)
-    catalog['artists'] = lt.newList(tipo)
+    catalog['tracks'] = lt.newList(tipo, cmpTracksIDs)
+    catalog['albums'] = lt.newList(tipo, cmpAlbumsIDs)
+    catalog['artists'] = lt.newList(tipo, cmpArtistsIDs)
 
     return catalog
 
@@ -544,19 +545,7 @@ def ordenamientoQuick(lst, cmpfunction):
 
 # Funciones de busqueda
 
-def binarySearch(lst, lookingForElement, cmpFunction):
-    pos_inicial = 1
-    lst_len = lt.size(lst)
- 
-    while pos_inicial <= lst_len:
-        mid = pos_inicial + (lst_len - pos_inicial) // 2
-        if cmpFunction(lt.getElement(lst, mid), lookingForElement) == 0:
-            pos_inicial = mid + 1
-        elif cmpFunction(lt.getElement(lst, mid), lookingForElement) == 1:
-            pos_inicial = mid - 1
-        else:
-            return mid
-    return -1
+
 
 def buscarLimiteDeElemento(lst, element, limit, Dict_Key):
     # limite == True -> busca el limite superior, else -> limite inferior
@@ -617,11 +606,29 @@ def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
 def cmpArtistsIDs(FirstArtist, SecondArtist):
     return FirstArtist["id"] < SecondArtist["id"]
 
-    # Funciones de comparacion de busqueda
+# Funciones para consola
+def clearConsole():
+    command = 'clear'
+    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
+        command = 'cls'
+    os.system(command)
 
-def cmpBinaryFunction(Album, lookingForElement):
-    if Album["id"] < lookingForElement["id"]:
-        return 0
-    elif Album["id"] > lookingForElement["id"]:
-        return 1
-    return 2
+
+# Funciones busqueda de id a nombre
+def idArtista_NombreArtista(lst_artists, idArtista):
+    index = binarySearch(lst_artists, idArtista, "id")
+    if index == -1:
+        return "No disponible"
+    return lt.getElement(lst_artists, index)["name"]
+
+def idAlbum_NombreAlbum(lst_albums, idAlbum):
+    index = binarySearch(lst_albums, idAlbum, "id")
+    if index == -1:
+        return "No disponible"
+    return lt.getElement(lst_albums, index)["name"]
+
+def idTrack_NombreTrack(lst_tracks, idTrack):
+    index = binarySearch(lst_tracks, idTrack, "id")
+    if index == -1:
+        return "No disponible"
+    return lt.getElement(lst_tracks, index)["name"]
