@@ -67,56 +67,62 @@ def loadData(tamanio_archivo):
 # Prints
 def print_artistFirstThreeLastThree(lista_primerosArtistas, lista_ultimosArtistas):
     x = PrettyTable()
-    x.field_names = ['name', 'artist_popularity', 'Popularidad', 'Número de seguidores']
+    x.field_names = ['name', 'artist_popularity', 'followers', 'genres', "cancion_referente"]
     
     if lista_primerosArtistas:
         for _ in range(1,4):
             datos_artista = lt.getElement(lista_primerosArtistas, _)
             x.add_row([
                 datos_artista['name'],
-                datos_artista['genres'],
                 datos_artista['artist_popularity'],
-                datos_artista['followers']
+                datos_artista['followers'],
+                ", ".join(datos_artista['genres']),
+                controller.idTrack_NombreTrack(control["model"]["tracks"], datos_artista["track_id"]),
             ])
 
     if lista_ultimosArtistas:
-        x.add_row(["...", "...", "...", "..."])
-        x.add_row(["...", "...", "...", "..."])
-        x.add_row(["...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
         for _ in range(1,4):
             datos_artista = lt.getElement(lista_ultimosArtistas, _)
             x.add_row([
                 datos_artista['name'],
-                datos_artista['genres'],
                 datos_artista['artist_popularity'],
-                datos_artista['followers']
+                datos_artista['followers'],
+                ", ".join(datos_artista['genres']),
+                controller.idTrack_NombreTrack(control["model"]["tracks"], datos_artista["track_id"]),
             ])
             
     print(x.get_string())
 
 def print_albumFirstThreeLastThree(lista_primerosAlbums, lista_ultimosAlbums):
     x = PrettyTable()
-    x.field_names = ['name', 'album_type', 'release_date']
+    x.field_names = ['name', 'release_date', 'album_type', "artist", "total_tracks"]
 
     if lista_primerosAlbums:
         for _ in range(1,4):
             datos_albums = lt.getElement(lista_primerosAlbums, _)
             x.add_row([
                 datos_albums['name'],
+                datos_albums['release_date'].year,
                 datos_albums['album_type'],
-                datos_albums['release_date']
+                controller.idArtista_NombreArtista(control['model']["artists"],datos_albums["artist_id"]),
+                datos_albums["total_tracks"]
             ])
 
     if lista_ultimosAlbums:
-        x.add_row(["...", "...", "..."])
-        x.add_row(["...", "...", "..."])
-        x.add_row(["...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
         for _ in range(1,4):
             datos_albums = lt.getElement(lista_ultimosAlbums, _)
             x.add_row([
                 datos_albums['name'],
+                datos_albums['release_date'].year,
                 datos_albums['album_type'],
-                datos_albums['release_date']
+                controller.idArtista_NombreArtista(control['model']["artists"],datos_albums["artist_id"]),
+                datos_albums["total_tracks"]
             ])
 
     print(x.get_string())
@@ -165,7 +171,7 @@ def print_requerimiento2(lista, n):
             datos['followers'],
             datos['name'],
             controller.buscarCancionPorID(control, datos['track_id']),
-            datos['genres']        
+            ", ".join(datos['genres'])       
         ])
     print(x.get_string())
 
@@ -183,18 +189,18 @@ def print_requerimiento3(lista_top, top):
             datos_tracks['duration_ms'],
             datos_tracks['href'][:15],
             datos_tracks['lyrics'][:15],
-            
          ])
     print(x.get_string)
     
 def print_Requerimiento4(lst):
     datos = lt.getElement(lst, 1)
     x = PrettyTable()
-    x.field_names = ['name', 'album_name', 'artists', 'duration_ms', 'popularity', 'preview_url', 'lyrics']
+    x.field_names = ['name', 'album_name', "release_date", 'artists', 'duration_ms', 'popularity', 'preview_url', 'lyrics']
     lista_nombreArtistas = controller.listaArtistas_IDaNombre(control, datos['artists_id'])
     x.add_row([
         datos['name'],
-        controller.albumName_Requerimiento4(control, datos['album_id']),
+        controller.idAlbum_NombreAlbum(control["model"]["albums"], datos['album_id']),
+        datos["release_date"],
         lista_nombreArtistas,
         datos['duration_ms'],
         datos['popularity'],
@@ -219,14 +225,13 @@ def printCanciones_Requerimiento5(lst):
 
 def print_Requerimiento6(lst, n):
     x = PrettyTable()
-    x.field_names = ['name', 'album_name', 'artists', 'avaliable_markets', 'popularity', 'duration_ms']
+    x.field_names = ['name', 'artists', 'avaliable_markets', 'popularity', 'duration_ms']
     
 
     for dato in lt.iterator(lst):
         lista_nombreArtistas = controller.listaArtistas_IDaNombre(control, dato['artists_id'])
         x.add_row([
             dato['name'],
-            controller.albumName_Requerimiento4(control, dato['album_id']),
             lista_nombreArtistas,
             dato['available_markets_size'],
             dato['popularity'],
@@ -251,9 +256,9 @@ def printFirstThreeLastThree_requerimiento5(FirstThree, LastThree):
             ])
 
     if LastThree:
-        x.add_row(["...", "...", "...", "...", "...", "..."])
-        x.add_row(["...", "...", "...", "...", "...", "..."])
-        x.add_row(["...", "...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
+        x.add_row(["...", "...", "...", "...", "..."])
         for _ in range(1,4):
             datos_albums = lt.getElement(LastThree, _)
             x.add_row([
@@ -345,7 +350,6 @@ while True:
         cantidadCancionesArtista, canciones_organizadas, cantidadAlbunesArtista = controller.Requerimiento4(control, artista, mercado)
         print(f"El número total de canciones del artista {artista} es: {cantidadCancionesArtista}")
         print(f"El número de álbumes asociados a el artista {artista} es: {cantidadAlbunesArtista}")
-        print(canciones_organizadas)
         print_Requerimiento4(canciones_organizadas)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
@@ -358,14 +362,23 @@ while True:
         print(f'Number of "compilation": {compilation}')
         print(f'Number of "album": {album}')
         # Requisito print primeros 3 y ultimos 3
-        printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)    
+        printFirstThreeLastThree_requerimiento5(albumFirstThree, albumLastThree)
+        input("\n>Hundir cualquier tecla para continuar...")    
 
     elif int(opcionMenu[0]) == 7:
         anio_inicial = int(input("Año inicial del periodo: "))
         anio_final = int(input("Año final del periodo: "))
         n = int(input("El número (N) de canciones a identificar (ej.: TOP 3, 5, 10 o 20): "))
-        organizarCanciones_available_markets = controller.Requerimiento6(control, anio_inicial, anio_final)
+        organizedAlbumsByYear = controller.ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
         
+        anio_inicial_index = controller.binarySearchLimites_years(control["model"]["albums"], anio_inicial, "release_date", True)
+        anio_final_index = controller.binarySearchLimites_years(control["model"]["albums"], anio_inicial, "release_date", False)
+        sublista = lt.subList(organizedAlbumsByYear, anio_inicial_index, (anio_final_index-anio_inicial_index))
+
+        getAlbumIDList = controller.getAlbumID(sublista)
+        canciones = controller.linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
+
+        organizarCanciones_available_markets = controller.ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
         print_Requerimiento6(organizarCanciones_available_markets, n)
         input("\n>Hundir cualquier tecla para continuar...")
         controller.clearConsole()
