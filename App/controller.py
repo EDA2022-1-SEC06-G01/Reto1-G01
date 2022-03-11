@@ -90,19 +90,12 @@ def getAlbumID(lst) -> list:
   return model.getAlbumID(lst)
 
 def linearSearch_Requerimiento6(lst, AlbumIDList):
-  return model.linearSearch_Requerimiento6(lst, AlbumIDList)
-
-
-
+  return model.linearSearch_Requerimiento6(lst, AlbumIDList)#
 
 
 def interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo):
-  return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo)
+  return model.interpolationSearch_Requerimiento1(lst, pos1, lst_size, elementToFind, primeroUltimo) #
 
-def BuscarTracksTOP(control, top):
-  ordenado = model.ordenamientoMerge(control["model"]["tracks"], model.cmpTracksPopularity)
-  TopTracks = model.buscarTracksTOP(ordenado, top)
-  return TopTracks
 
 def listaArtistasID(lst, datos):
   
@@ -110,7 +103,7 @@ def listaArtistasID(lst, datos):
   string = ""
   for i in datos:
     string += lt.getElement(lista, model.binarySearch(lista, i, "id"))["name"] + ", "
-  return string
+  return string#S
 
   
 def binarySearch(lst, elemento, elementoDiccionario):
@@ -121,15 +114,11 @@ def binarySearchLimites_tracks(control, elemento, primeroUltimo):
   return model.binarySearchLimites(control["model"]["tracks"], elemento, "artists_id", primeroUltimo)
 
 def linearSearch_Requerimiento4(lst, element, mercado):
-  return model.linearSearch_Requerimiento4(lst, element, mercado)
+  return model.linearSearch_Requerimiento4(lst, element, mercado) #
 
 def contador_elementos(lst, element):
-  return model.contador_elementos(lst, element)
+  return model.contador_elementos(lst, element) #
 
-def agregarNombreArtista_TrackName(lst, lstArtists, lstTracks):
-  for _ in lt.iterator(lst):
-    ArtistID = _["artist_id"]
-    _["artist_name"] = lt.getElement(lstArtists, binarySearch(lstArtists, ArtistID, "id"))["name"]
 
 # Funciones de comparacion
 def cmpArtistsByFollowers(artist1, artist2):
@@ -146,18 +135,18 @@ def buscarCancionPorID(control, elementoBuscado):
   if index == -1:
     return "Not found"
   else:
-    return lt.getElement(lista_ordenada, index)["name"]
+    return lt.getElement(lista_ordenada, index)["name"]#
 
 def albumName_Requerimiento4(control, elemento):
   lista = model.ordenamientoShell(control["model"]["albums"], model.cmpAlbumsIDs)
-  return lt.getElement(lista ,binarySearch(lista, elemento, "id"))["name"]
+  return lt.getElement(lista ,binarySearch(lista, elemento, "id"))["name"] #
 
 def listaArtistas_IDaNombre(control, lista_artistas):
   lista = model.ordenamientoShell(control["model"]["artists"] , model.cmpArtistsID_tracksID)
   string = ""
   for i in lista_artistas:
     string += lt.getElement(lista, binarySearch(lista, i, "id"))["name"] + ", "
-  return string[:-2]
+  return string[:-2] #
 
 def buscarIDArtista(control, elementoBuscado):
   lista_ordenada = model.ordenamientoShell(control["model"]["artists"] , model.cmpArtistsByName)
@@ -165,7 +154,7 @@ def buscarIDArtista(control, elementoBuscado):
   if index == -1:
     return "Not found"
   else:
-    return lt.getElement(lista_ordenada, index)["id"]
+    return lt.getElement(lista_ordenada, index)["id"] #
 
 
 
@@ -223,14 +212,13 @@ def ordenamientoQuick(control, funcion):
 
 # Funciones de busqueda
 
-def binarySearch(lst, lookingForElement, cmpFunction):
-  return binarySearch(lst, lookingForElement, cmpFunction)
+
 
 # Funciones para sacar datos
 
 def FirstThreeLastThree(list, list_size):
   firstThree, lastThree = model.firstThreeLastThree(list, list_size)
-  return firstThree, lastThree
+  return firstThree, lastThree #
 
 
 # Funciones de comparacion
@@ -243,3 +231,42 @@ def cmpAlbumsIDs(FirstAlbum, SecondAlbum):
 
 def cmpArtistsIDs(FirstArtist, SecondArtist):
     return model.cmpArtistsIDs(FirstArtist, SecondArtist)
+
+#Requerimientos
+
+def Requerimiento1(control, inicial, final):
+  organized = ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
+  index_anio_inicial = interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), inicial, True)
+  index_anio_final = interpolationSearch_Requerimiento1(organized, 1, lt.size(organized), final, False)
+  sublista = lt.subList(organized, index_anio_inicial, (index_anio_final - index_anio_inicial))
+  albumFirstThree, albumLastThree = FirstThreeLastThree(sublista, size(sublista))
+  return albumFirstThree, albumLastThree
+
+def Requerimiento2(control, n):
+  organized = ordenamientoShell(control["model"]["artists"], model.cmpArtistsPopularity)
+  top_n = lt.subList(organized, 1, n)
+  albumFirstThree, albumLastThree = FirstThreeLastThree(top_n, size(top_n))
+  return top_n, albumFirstThree, albumLastThree
+
+
+def Requerimiento3(control, top):
+  ordenado = model.ordenamientoMerge(control["model"]["tracks"], model.cmpTracksPopularity)
+  TopTracks = model.buscarTracksTOP(ordenado, top)
+  return TopTracks
+
+def Requerimiento4(control, artista, mercado):
+  idArtista = buscarIDArtista(control, artista)
+  cantidadCancionesArtista, cancionesDeArtista = linearSearch_Requerimiento4(control["model"]["tracks"], idArtista, mercado)
+  canciones_organizadas = ordenamientoShell(cancionesDeArtista, model.cmpTrackPopularity_duration_name)
+  cantidadAlbunesArtista = contador_elementos(control["model"]["albums"], idArtista)
+  return cantidadCancionesArtista, canciones_organizadas, cantidadAlbunesArtista
+
+def Requerimiento6(control, anio_inicial,anio_final):
+  organizedAlbumsByYear = ordenamientoShell(control['model']['albums'], model.cmpYearsMenorMayor)
+  anio_inicial_index = interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, size(organizedAlbumsByYear), anio_inicial, True)
+  anio_final_index = interpolationSearch_Requerimiento1(organizedAlbumsByYear, 1, size(organizedAlbumsByYear), anio_final, False)
+  sublista = lt.subList(organizedAlbumsByYear, anio_inicial_index, anio_final_index-anio_inicial_index)
+  getAlbumIDList = getAlbumID(sublista)
+  canciones = linearSearch_Requerimiento6(control["model"]["tracks"], getAlbumIDList)
+  organizarCanciones_available_markets = ordenamientoShell(canciones, model.cmpAvailableMarkets_popularity_name)
+  return organizarCanciones_available_markets
